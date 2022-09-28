@@ -99,6 +99,7 @@ namespace AliRTCSdk
         AliEngineVideoFormatTextureOES  = 11,
         AliEngineVideoFormatTexture2D  = 12,
         AliEngineVideoFormatH264  = 13,
+        AliEngineVideoFormatFile = 14,
     } AliEngineVideoFormat;
 
     /**
@@ -109,6 +110,8 @@ namespace AliRTCSdk
         AliEngineBufferTypeRawData          = 0,
         /** 纹理格式 */
         AliEngineBufferTypeTexture,
+        /** 文件路径格式 */
+        AliEngineBufferTypeFile,
     } AliEngineBufferType;
 
 
@@ -733,6 +736,21 @@ namespace AliRTCSdk
        */
       virtual int PushExternalVideoFrame(const AliEngineVideoRawData &frame,
         AliEngineVideoTrack type) = 0;
+        
+        
+     /**
+      * @brief 输入视频数据
+      * @param frame 帧数据，详见 {@link AliEngineVideoRawData}
+      * @param type 流类型，详见 {@link AliEngineVideoTrack}
+      * - AliEngineVideoTrackCamera 外部输入视频数据走相机流通道
+      * - AliEngineVideoTrackScreen 外部输入视频数据走屏幕流通道
+      * @return
+      * - 0: 成功
+      * - 非0: 失败
+      * @note
+      */
+      virtual int SetExternalImageData(const AliEngineVideoRawData &frame, AliEngineVideoTrack type) = 0;
+        
 
       /**
       * @brief 设置是否启用外部音频输入推流

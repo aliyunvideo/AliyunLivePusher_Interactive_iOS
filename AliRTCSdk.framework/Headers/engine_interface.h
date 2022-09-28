@@ -3528,6 +3528,17 @@ namespace AliRTCSdk
          * - -1: 失败
         */
         virtual int SetPublishImage(const char* image_url) = 0;
+        
+        /**
+         * @brief 设置推流静态图片
+         * @param frame 图片路径或者rawdata
+         * @param track track类型
+         * @return
+         * - 0: 成功
+         * - -1: 失败
+         */
+        virtual int SetExternalImageData(const AliEngineVideoRawData &frame,
+                                        AliEngineVideoTrack track) =  0;
         /**
          * @brief 清理水印
          * @details SDK提供了清理水印的功能，适用于推送屏幕流或者相机流场景
@@ -3639,6 +3650,45 @@ namespace AliRTCSdk
          * - 非0: 失败
          */
         virtual int SetCameraZoom(float zoom) = 0;
+        
+        /**
+         * @brief 获取摄像头最大缩放比例
+         * @return 摄像头最大缩放比例
+         */
+        virtual float GetCameraMaxZoomFactor() = 0;
+        
+        /**
+         * @brief 获取摄像头缩放比例
+         * @return 摄像头缩放比例
+         */
+        virtual float GetCurrentZoom() = 0;
+        
+        /**
+         * @brief 设置摄像头曝光度
+         * @param exposure 曝光度
+         * @return
+         * - 0: 成功
+         * -非0: 失败
+         */
+        virtual int SetExposure(float exposure) = 0;
+        
+        /**
+         * @brief 获取摄像头曝光度
+         * @return 摄像头曝光度
+         */
+        virtual float GetCurrentExposure() = 0;
+        
+        /**
+         * @brief 获取摄像头最小曝光度
+         * @return 摄像头最小曝光度
+         */
+        virtual float GetMinExposure() = 0;
+        
+        /**
+         * @brief 获取摄像头最大曝光度
+         * @return 摄像头最大曝光度
+         */
+        virtual float GetMaxExposure() = 0;
 
         /**
          * @brief 设置摄像头闪光灯是否打开

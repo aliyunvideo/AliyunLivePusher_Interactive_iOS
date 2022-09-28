@@ -164,8 +164,7 @@ AlivcLivePusherAudioSampleDelegate;
 
 
 /**
- 暂停推流
- @note 当前SDK暂时只支持在livePushMode = AlivcLivePushBasicMode 模式下暂停推流，AlivcLivePushInteractiveMode模式下暂时不支持暂停推流
+ 暂停摄像头推流，如果pushCongfig 中设置了pauseImg图片，将推设置的静态图片
  @return 0:success  非0:failure
  */
 - (int)pause;
@@ -173,8 +172,7 @@ AlivcLivePusherAudioSampleDelegate;
 
 
 /**
- 恢复推流 同步接口
- @note 当前SDK暂时只支持在livePushMode = AlivcLivePushBasicMode 模式下恢复推流接口，AlivcLivePushInteractiveMode模式下暂时不支持恢复推流接口
+ 恢复摄像头推流 同步接口
  @return 0:success  非0:failure
  */
 - (int)resume;
@@ -230,7 +228,6 @@ AlivcLivePusherAudioSampleDelegate;
 
 /**
  恢复推流 异步接口
- @note 当前SDK暂时只支持在livePushMode = AlivcLivePushBasicMode 模式下恢复推流，AlivcLivePushInteractiveMode模式下暂时不支持恢复推流
  @return 0:success  非0:failure
  */
 - (int)resumeAsync;
@@ -277,7 +274,6 @@ AlivcLivePusherAudioSampleDelegate;
 
 /**
  获取支持的最大变焦值
- @note 当前SDK暂时只支持在livePushMode = AlivcLivePushBasicMode 模式下获取支持的最大变焦值，AlivcLivePushInteractiveMode模式下暂时不支持获取支持的最大变焦值
  @return 最大变焦值
  */
 - (float)getMaxZoom;
@@ -302,7 +298,6 @@ AlivcLivePusherAudioSampleDelegate;
 
 /**
  设置曝光度
- @note 当前SDK暂时只支持在livePushMode = AlivcLivePushBasicMode 模式下设置曝光度，AlivcLivePushInteractiveMode模式下暂时不支持设置曝光度
  @param exposure 曝光度
  @return 0:success  非0:failure
  */
@@ -311,21 +306,18 @@ AlivcLivePusherAudioSampleDelegate;
 
 /**
  获取当前曝光度
- @note 当前SDK暂时只支持在livePushMode = AlivcLivePushBasicMode 模式下获取当前曝光度，AlivcLivePushInteractiveMode模式下暂时不支持获取当前曝光度
  @return  曝光度
  */
 - (float)getCurrentExposure;
 
 /**
  获取支持最小曝光度
- @note 当前SDK暂时只支持在livePushMode = AlivcLivePushBasicMode 模式下获取支持最小曝光度，AlivcLivePushInteractiveMode模式下暂时不支持获取支持最小曝光度
  @return  最小曝光度
  */
 - (float)getSupportedMinExposure;
 
 /**
  获取支持最大曝光度
- @note 当前SDK暂时只支持在livePushMode = AlivcLivePushBasicMode 模式下获取支持最大曝光度，AlivcLivePushInteractiveMode模式下暂时不支持获取支持最大曝光度
  @return  最大曝光度
  */
 - (float)getSupportedMaxExposure;

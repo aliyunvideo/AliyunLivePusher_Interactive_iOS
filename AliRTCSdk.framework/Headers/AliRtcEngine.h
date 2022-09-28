@@ -306,7 +306,10 @@ typedef NS_ENUM(NSInteger, AliRtcVideoFormat) {
     AliRtcVideoFormat_RGB24,
     AliRtcVideoFormat_BGR24,
     AliRtcVideoFormat_RGB565,
+    AliRtcVideoFormat_TextureOES,
+    AliRtcVideoFormat_Texture2D,
     AliRtcVideoFormat_H264,
+    AliRtcVideoFormat_File,
 };
 
 
@@ -318,6 +321,8 @@ typedef NS_ENUM(NSInteger, AliRtcBufferType) {
     AliRtcBufferType_Raw_Data = 0,
     /** CVPixelBuffer数据 */
     AliRtcBufferType_CVPixelBuffer,
+    /** 文件路径 */
+    AliRtcBufferType_File,
 };
 
 /**
@@ -3194,6 +3199,15 @@ typedef NS_ENUM(NSInteger, AliRtcVideoEncodedFrameType) {
 - (int)setCameraCapturerConfiguration:(AliRtcCameraCapturerConfiguration* _Nonnull )config;
 
 /**
+ * @brief 设置设备方向
+ * @param mode 设备方向 {@link AliRtcOrientationMode}
+ * @return
+ * - 0: 成功
+ * - 非0: 失败
+ */
+- (int)setDeviceOrientationMode:(AliRtcOrientationMode)mode;
+
+/**
  * @brief 禁用或启用本地视频采集
  * @param enabled
  * - YES : 启用本地视频采集
@@ -3786,6 +3800,46 @@ typedef NS_ENUM(NSInteger, AliRtcVideoEncodedFrameType) {
  - (int)setCameraZoom:(float)zoom;
 
 /**
+ * @brief 获取摄像头最大缩放比例
+ * @return 摄像头最大缩放比例
+ * @note 只有IOS和Android提供这个接口
+ */
+ - (float)GetCameraMaxZoomFactor;
+
+/**
+ * @brief 获取摄像头最大缩放比例
+ * @return 摄像头最大缩放比例
+ */
+- (float)GetCurrentZoom;
+
+/**
+ * @brief 设置摄像头曝光度
+ * @param exposure 曝光度
+ * @return
+ * - 0: 成功
+ * -非0: 失败
+ */
+- (int)SetExposure:(float)exposure;
+
+/**
+ * @brief 获取摄像头曝光度
+ * @return 摄像头曝光度
+ */
+- (float)GetCurrentExposure;
+
+/**
+ * @brief 获取摄像头最小曝光度
+ * @return 摄像头最小曝光度
+ */
+- (float)GetMinExposure;
+
+/**
+ * @brief 获取摄像头最大曝光度
+ * @return 摄像头最大曝光度
+ */
+- (float)GetMaxExposure;
+
+/**
  * @brief 设置摄像头闪光灯开关
  * @param flash  是否打开闪光灯
  * @return
@@ -4134,6 +4188,20 @@ NS_ASSUME_NONNULL_END
  * @note 如果返回值为errorCode中的AliRtcErrVideoBufferFull，代表当前buffer队列塞满，需要等待后再继续输送数据
 */
 - (int)pushExternalVideoFrame:(AliRtcVideoDataSample *_Nonnull)frame sourceType:(AliRtcVideoSource)type;
+
+/**
+ * @brief 输入视频数据
+ * @param frame 帧数据，详见 {@link AliEngineVideoRawData}
+ * @param type 流类型，详见 {@link AliEngineVideoTrack}
+ * - AliEngineVideoTrackCamera 外部输入视频数据走相机流通道
+ * - AliEngineVideoTrackScreen 外部输入视频数据走屏幕流通道
+ * @return
+ * - 0: 成功
+ * - 非0: 失败
+ * @note
+ */
+- (int)setExternalImageData:(AliRtcVideoDataSample *_Nonnull)frame sourceType:(AliRtcVideoSource)type;
+
 
 /**
  * @deprecated 建议参考 {@link addExternalAudioStream:} 及相关接口

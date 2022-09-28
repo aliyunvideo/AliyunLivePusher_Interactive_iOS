@@ -48,6 +48,37 @@
  */
 - (void)stopPlay;
 
+/**
+ 暂停播放音频流
+ */
+- (void)pauseAudioPlaying;
+
+/**
+ 恢复播放音频流
+ */
+- (void)resumeAudioPlaying;
+
+/**
+ 暂停播放视频流
+ */
+- (void)pauseVideoPlaying;
+
+/**
+ 恢复播放视频流
+ */
+- (void)resumeVideoPlaying;
+
+/**
+  设置播放音量
+ * @param volume 播放音量，取值范围[0,400]
+ * - 0：静音
+ * - <100：减小音量
+ * - >100：放大音量
+ * @return
+ * - 0: 成功
+ * - 非0: 失败
+ */
+- (int)setPlayoutVolume:(NSInteger)volume;
 
 @end
 
