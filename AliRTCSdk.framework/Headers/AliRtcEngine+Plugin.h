@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "AliRtcEngine.h"
+#import "engine_define.h"
+
 /// @addtogroup AliRtcDef_ios iOS关键类型定义
 /// AliRTC功能的插件扩展
 /// @{
@@ -76,7 +78,7 @@ enum AliRtcPluginOperationType{
 /// @addtogroup AliRtc_ios AliRtcEngine
 /// AliRTC功能的插件扩展
 /// @{
-@interface AliRtcEngine(Plugin)
+ALI_RTC_API @interface AliRtcEngine(Plugin)
 
 /**
  * @brief 开启音视频处理算法插件

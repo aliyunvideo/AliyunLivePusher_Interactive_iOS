@@ -558,6 +558,8 @@ namespace AliRTCSdk
         AliEngineErrorIceConnectionConnectFail = 0x01050201,
         /** 媒体通道重连失败，检查网络连接是否正常 */
         AliEngineErrorIceConnectionReconnectFail = 0x01050202,
+        /** 媒体通道mobility失败，应用层需要重走入会流程 */
+        AliEngineErrorIceConnectionMobilityFail = 0x01050203,
         /** 信令心跳超时，检查网络连接是否正常 */
         AliEngineErrorIceConnectionHeartbeatTimeout = 0x0102020C,
 

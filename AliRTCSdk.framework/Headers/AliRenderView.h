@@ -10,8 +10,9 @@
 #define AliRenderView_h
 
 #import <UIKit/UIKit.h>
+#import "engine_define.h"
 
-@interface AliRenderView : UIView
+ALI_RTC_API @interface AliRenderView : UIView
 
 @property (nonatomic, assign, readonly) NSUInteger renderId;
 @property (nonatomic, assign, readonly) int renderWidth;
