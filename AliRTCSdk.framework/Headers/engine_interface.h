@@ -2699,7 +2699,7 @@ namespace AliRTCSdk
          * @param size 扩展信息长度
          * @note 当一端通过 {@link AliEngine::SendMediaExtensionMsg} 发送信息后，其他端通过该回调接收数据
          */
-        virtual void OnMediaExtensionMsgReceived(const char* uid,unsigned char* message, unsigned int size) {};
+        virtual void OnMediaExtensionMsgReceived(const char* uid, const int8_t * message, uint32_t size) {};
 
         /**
          * @brief 音频设备状态变更
@@ -4593,27 +4593,30 @@ namespace AliRTCSdk
         virtual int UpdateLiveStreamingViewConfig(AliEngineVideoCanvas& renderConfig) = 0;
         
         /**
-         * @brief 发送媒体扩展信息
+         * @brief 发送媒体扩展信息，内部使用SEI实现
          * @details SDK提供了发送和接收媒体扩展信息的功能，接收端参考 {@link AliEngineEventListener::OnMediaExtensionMsgReceived}，使用场景：
          * - 使用媒体扩展信息传递时间戳，计算端到端的网络延迟，或者跟自身其他业务做数据同步
-         * - 使用媒体扩展信息传递位控制信息。目前可以传递8 Byte数据，即64位，每一位或几位可以表示控制信息，用于自身业务上的指令传输
+         * - 使用媒体扩展信息传递位控制信息。目前可以传递4K Byte数据，用于自身业务上的少量数据传输
          *
-         * @param message 扩展信息内容, 长度限制为最大8字节
-         * @param length 扩展信息长度
+         * @param message 扩展信息内容, 长度限制为最大4*1024字节
+         * @param length 扩展信息长度，长度限制为最大4*1024字节
          * @param repeatCount 重复次数，代表消息冗余度，用于防止网络丢包导致的消息丢失
+         * @param delay 延迟多少发出去，单位毫秒
+         * @param isKeyFrame 是否只在关键帧上增加SEI
          * @return
          * - 0: 成功
          * - <0: 失败
          *      - ERR_INNER(-1): SDK内部错误，可能的情况为SDK未初始化或者SDK销毁后调用
          *
          * @note 使用媒体扩展信息时需要复用音视频数据通道，因此必须控制自定义消息的发送频率和消息数据长度，使用限制如下：
-         * - 每秒最多发送30条消息
-         * - 为了不影响媒体数据的传输质量，自定义消息体长度限制为8 Byte，可以用来传输时间戳，位控制信息等
+         * - 因为SEI信息是放到编码器后的流里面，因此每秒最多发送Profile设置的fps条消息
+         * - 为了不影响媒体数据的传输质量，自定义消息体长度限制为最大 4K Bytes，可以用来传输各类信息；
          * - sendMediaExtensionMsg函数中repeatCount参数为自定义消息冗余度，若大于1，则会发送多次，防止网络丢包导致的消息丢失，此时房间里的其他人也会收到多次相同的消息，需要去重
-         * - 发送的自定义消息，在旁路直播时，房间里的订阅者也一样会收到
+         * - 发送的自定义消息，在旁路直播时，房间里的订阅者也一样会收到,如果-1，则无限重发，一直到再次调用SendMediaExtensionMsg设置消息；
          * - 目前H5端不支持发送和接收媒体扩展信息
          */
-        virtual int SendMediaExtensionMsg(unsigned char *message, unsigned int length, int repeatCount) = 0;
+        virtual int SendMediaExtensionMsg(const int8_t * message,
+                                          uint32_t length, int32_t repeatCount, uint32_t delay, bool isKeyFrame) = 0;
 
         /**
          * @brief 根据桌面Id进行屏幕分享

@@ -4929,26 +4929,28 @@ NS_ASSUME_NONNULL_END
  */
 
 /**
- * @brief 发送媒体扩展信息
+ * @brief 发送媒体扩展信息，底层使用SEI实现
  * @details SDK提供了发送和接收媒体扩展信息的功能，接收端参考 {@link AliRtcEngineDelegate::onMediaExtensionMsgReceived:message:}，使用场景：
- * - 使用媒体扩展信息传递时间戳，计算端到端的网络延迟，或者跟自身其他业务做数据同步
- * - 使用媒体扩展信息传递位控制信息。目前可以传递8 Byte数据，即64位，每一位或几位可以表示控制信息，用于自身业务上的指令传输
+ * - 使用媒体扩展信息传递各类少量数据，长度限制为4K 字节，建议使用文本；
  *
- * @param data 扩展信息内容, 长度限制为最大8字节
- * @param repeatCount 重复次数，代表消息冗余度，用于防止网络丢包导致的消息丢失
+ * @param data 扩展信息内容, 长度限制为最大4K 字节
+ * @param repeatCount 重复次数，代表消息冗余度，用于防止网络丢包导致的消息丢失-1表示无限重发，除非再一次调用sendMediaExtensionMsg
+ * @param delay 延迟多少毫秒发送 用来延迟多少毫秒之后再发送SEI，因SEI是附在编码之后的h264/h265流，所以实际的延迟会比设置的延迟略大
+ * @param isKeyFrame 是否只给关键帧加SEI 设置为true，则只给关键帧加SEI信息
  * @return
  * - 0: 成功
  * - <0: 失败
  *      - ERR_INNER(-1): SDK内部错误，可能的情况为SDK未初始化或者SDK销毁后调用
  *
  * @note 使用媒体扩展信息时需要复用音视频数据通道，因此必须控制自定义消息的发送频率和消息数据长度，使用限制如下：
- * - 每秒最多发送30条消息
- * - 为了不影响媒体数据的传输质量，自定义消息体长度限制为8 Byte，可以用来传输时间戳，位控制信息等
+ * - 每秒最多发送profile设置的fps条消息
+ * - 为了不影响媒体数据的传输质量，自定义消息体长度限制为4K Bytes，可以可以用来传输少量数据
  * - sendMediaExtensionMsg函数中repeatCount参数为自定义消息冗余度，若大于1，则会发送多次，防止网络丢包导致的消息丢失，此时房间里的其他人也会收到多次相同的消息，需要去重
- * - 发送的自定义消息，在旁路直播时，房间里的订阅者也一样会收到
+ * - 发送的自定义消息，在旁路直播时，房间里的订阅者也一样会收到，设置为-1为永久发送data数据，除非重新设置sendMediaExtensionMsg
  * - 目前H5端不支持发送和接收媒体扩展信息
+ * - 同一时刻只有一个 sendMediaExtensionMsg 会被发送，意味着调用sendMediaExtensionMsg会覆盖上一次调用的sendMediaExtensionMsg，如果上次的调用没有发送或者没有发送完成；
  */
-- (int)sendMediaExtensionMsg:(NSData *_Nonnull)data repeatCount:(int)repeatCount;
+- (int)sendMediaExtensionMsg:(NSData *_Nonnull)data repeatCount:(int)repeatCount delay:(int)delay isKeyFrame:(bool)isKeyFrame;
 
 /**
  * @brief 添加水印
