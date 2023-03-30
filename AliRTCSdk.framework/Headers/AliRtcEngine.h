@@ -371,6 +371,12 @@ typedef NS_ENUM(NSInteger, AliRtcAudioEffectVoiceChangerMode) {
     AliRtcAudioEffectvVoiceChanger_KTV,
     /** 回声 */
     AliRtcAudioEffectvVoiceChangerR_ECHO,
+    /** 方言 */
+    AliRtcAudioEffectvVoiceChangerR_DIALECT,
+    /** 怒吼 */
+    AliRtcAudioEffectvVoiceChangerR_HOWL,
+    /** 电音 */
+    AliRtcAudioEffectvVoiceChangerR_ELECTRONIC,
     /** 占位符 */
     AliRtcAudioEffectvVoiceChanger_MAX,
 };

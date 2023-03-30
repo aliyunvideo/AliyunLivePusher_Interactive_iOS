@@ -207,6 +207,13 @@ namespace AliRTCSdk
         AliEngineAudioEffectVoiceChangerKTV,
         /** 回声 */
         AliEngineAudioEffectVoiceChangerEcho,
+        /** 方言 */
+        AliEngineAudioEffectVoiceChangerDialect,
+        /** 怒吼 */
+        AliEngineAudioEffectVoiceChangerHow,
+        /** 电音 */
+        AliEngineAudioEffectVoiceChangerElectroinc,
+
     } AliEngineAudioEffectVoiceChangerMode;
     
     /**
