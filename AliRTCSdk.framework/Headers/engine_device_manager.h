@@ -234,6 +234,30 @@ namespace AliRTCSdk
        */
       virtual int StartTestAudioRecordById(const char * deviceId, int callbackInterval = 0) = 0;
 
+	  /**
+	  * @brief 开启播放设备测试(按设备名称)
+	  * @param deviceName 设备名称
+	  * @param callbackInterval 音量回调频率(毫秒，默认值200毫秒)
+	  * @param filepath_utf8 播放的测试音频文件全路径 wav s16格式
+	  * @return
+	  * - 0: 成功
+	  * - 非0: 失败
+	  * @note 开始测试后音量信息通过 {@link AliEngineEventListener::OnAudioDevicePlayoutLevel} 回调返回
+	  */
+	  virtual int StartTestAudioPlayoutByName(const char *deviceName, const char * filepath_utf8, int callbackInterval = 0) = 0;
+
+	  /**
+	  * @brief 开启播放设备测试(按设备id)
+	  * @param deviceId 设备id
+	  * @param callbackInterval 音量回调频率(毫秒，默认值200毫秒)
+	  * @param filepath_utf8 播放的测试音频文件全路径 wav s16格式
+	  * @return
+	  * - 0: 成功
+	  * - 非0: 失败
+	  * @note 开始测试后音量信息通过 {@link AliEngineEventListener::OnAudioDevicePlayoutLevel} 回调返回
+	  */
+	  virtual int StartTestAudioPlayoutById(const char * deviceId, const char * filepath_utf8, int callbackInterval = 0) = 0;
+
       /**
        * @brief 停止测试音频采集设备
        * @return

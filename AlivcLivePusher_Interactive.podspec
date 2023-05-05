@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "AlivcLivePusher_Interactive"
-  s.version      = "4.5.1"
+  s.version      = "6.0.0"
   s.summary      = "AlivcLivePusher_Interactive_iOS"
   s.description  = <<-DESC
                    It's an SDK for aliyun live pusher for interactive, which implement by Objective-C.
@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/aliyunvideo/AliyunLivePusher_Interactive_iOS.git", :tag => "#{s.version}" }
 
   s.subspec 'AlivcLivePusher' do |pushersdk|
-  pushersdk.vendored_frameworks = 'AlivcLivePusher.framework','AlivcLibReplayKitExt.framework','AliRTCSdk.framework','PluginOpus.framework'
+  pushersdk.vendored_frameworks = 'AlivcLivePusher.framework','AlivcLibReplayKitExt.framework','AliRTCSdk.framework','PluginOpus.framework','alivcffmpeg_lite.framework'
   pushersdk.frameworks = "CoreVideo","OpenGLES","AVFoundation","CoreMedia","VideoToolbox","AudioToolbox"
 # pushersdk.frameworks = 'MediaPlayer','CoreGraphics'
   end

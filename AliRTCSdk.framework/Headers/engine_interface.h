@@ -213,6 +213,8 @@ namespace AliRTCSdk
         AliEngineAudioEffectVoiceChangerHow,
         /** 电音 */
         AliEngineAudioEffectVoiceChangerElectroinc,
+        /** 留声机 */
+        AliEngineAudioEffectVoiceChangerPhonograph,
 
     } AliEngineAudioEffectVoiceChangerMode;
     
@@ -1797,6 +1799,16 @@ namespace AliRTCSdk
     };
 
     /**
+    * @brief 旁路直播视频编码器
+    */
+    enum AliEngineLiveTranscodingVideoCodec {
+        /** H.264 */
+        AliEngineLiveTranscodingVideoCodec_H264 = 1,
+        /** H.265 */
+        AliEngineLiveTranscodingVideoCodec_H265 = 2
+    };
+
+    /**
     * @brief 旁路直播自定义编码参数
     */
     struct AliEngineLiveTranscodingEncodeParam {
@@ -1805,6 +1817,7 @@ namespace AliRTCSdk
         int videoFramerate = 15; //[1,60]
         int videoBitrate = 500; //[1kbps,10000kbps]
         int videoGop = 30; //[1,60]
+        AliEngineLiveTranscodingVideoCodec videoCodec = AliEngineLiveTranscodingVideoCodec_H264;
         AliEngineLiveTranscodingAudioSampleRate audioSamplerate = AliEngineLiveTranscoding_HZ_32000;
         int audioBitrate = 500; //[8kbps,500kbps]
         int audioChannels = 1; //[1,2]
@@ -2293,6 +2306,13 @@ namespace AliRTCSdk
         */
         virtual void OnScreenSharePublishStateChangedWithInfo(AliEnginePublishState oldState, AliEnginePublishState newState, int elapseSinceLastState, const char *channel, AliEngineScreenShareInfo& screenShareInfo) {};
 #endif
+
+        /**
+         * @brief 使用RTS URL推流结果
+         * @details 应用调用 {@link AliEngine::PublishStreamByRtsUrl} 方法时，该回调表示推流成功/失败
+         * @param result 推流结果，成功返回0，失败返回错误码
+         */
+        void OnPublishStreamByRtsUrlResult(const char* rts_url, int result) {};
 
         /**
          * @brief 远端用户的音视频流发生变化回调
@@ -2953,11 +2973,21 @@ namespace AliRTCSdk
          * @note 调用此接口，请在仅次于SetLogDirPath接口调用之后再调用本接口，避免因日志等级切换造成的打印丢失。
          */
         static void SetLogLevel(AliEngineLogLevel logLevel);
+        
+        /**
+         * @brief 设置是否上传日志文件，默认上传
+         * @param enable
+         *  - true 上传日志文件
+         *  - false 不上传日志文件
+         *  @note 入会前调用此接口，请在SetLogLevel接口调用之后立即调用本接口。
+         */
+        static void EnableUploadLog(bool enable);
 
         /**
          * @brief 上传日志文件
          * @details 用户主动调用此接口，将当前日志目录下的所有未上传的日志文件进行压缩、打包、上传。
          * @note 上传过程中，如果有进入频道等操作，会自动打断上传行为，不会影响下次入会。
+         * @note 请在调用EnableUploadLog之后，再调用本接口。EnableUploadLog传入参数false之后，本接口将失效。
          */
         static void UploadLog();
         
@@ -2975,6 +3005,15 @@ namespace AliRTCSdk
          * @param height 视频帧高度
          */
         static void GetEncodeParam(int *width, int *height);
+        
+        /**
+         * @brief 设置是否上传业务埋点，默认上传
+         * @param enable
+         *  - true 上传业务埋点
+         *  - false 不上传业务埋点
+         * @note 在调用{@link Create}创建AliRtcEngine实例后，应立即调用此接口，避免预期之外的埋点上传
+         */
+        virtual void EnableStatsReport(bool enable) = 0;
         
         /**
          * @brief 获取功能接口实例
@@ -3258,7 +3297,27 @@ namespace AliRTCSdk
          * @note SDK默认设置推送音频流，在加入频道前也可以调用此接口修改默认值，并在加入频道成功时生效
          */
         virtual int PublishLocalAudioStream(bool enabled) = 0;
+
+        /**
+         * @brief 根据RtsUrl推流，目前同时只支持推一路流
+         * @param rtsUrl rts1.0 url，不携带roomserver信息
+         * @return 
+         * - 0: 成功
+         * - 非0: 失败
+         * @note 该接口用于推送本地音视频流到指定的Rts1.0 Url，Rts1.0 url不携带roomserver信息
+         */
+        virtual int PublishStreamByRtsUrl(const char* rtsUrl) = 0;
         
+        /**
+         * @brief 根据RtsUrl停止推流
+         * @param rtsUrl rts1.0 url，不携带roomserver信息
+         * @return 
+         * - 0: 成功
+         * - 非0: 失败
+         * @note 该接口用于停止推送本地音视频流
+         */
+        virtual int StopPublishStreamByRtsUrl(const char* rtsUrl) = 0;
+
         /**
         * @brief 停止/恢复本地音频数据发送
         * @param mute  true表示静音本地音频，发送静音帧; false表示取消静音;
@@ -4598,7 +4657,7 @@ namespace AliRTCSdk
          * - 非0: 失败
          */
         virtual int UpdateLiveStreamingViewConfig(AliEngineVideoCanvas& renderConfig) = 0;
-        
+
         /**
          * @brief 发送媒体扩展信息，内部使用SEI实现
          * @details SDK提供了发送和接收媒体扩展信息的功能，接收端参考 {@link AliEngineEventListener::OnMediaExtensionMsgReceived}，使用场景：
@@ -5030,6 +5089,17 @@ namespace AliRTCSdk
          * - 非0: 失败
         */
         virtual int EnableEncryption(bool enable) = 0;
+        
+        
+        /**
+         * @brief 获取视频编码类型
+         * @param codecKind 视频codec类型 编码/解码
+         * @param videoFormat 视频codec格式 h264/h265
+         * @return
+         * - 0: 成功
+         * - 非0: 失败
+         */
+        virtual int GetVideoCodecType(AliEngineVideoCodecKindType codecKind, AliEngineVideoFormat & videoFormat) = 0;
 #if defined(WEBRTC_ANDROID)
         /**
          * @brief 请求音频焦点

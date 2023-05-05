@@ -313,9 +313,18 @@ typedef NS_ENUM(NSInteger, AliRtcVideoFormat) {
     AliRtcVideoFormat_TextureOES,
     AliRtcVideoFormat_Texture2D,
     AliRtcVideoFormat_H264,
+    AliRtcVideoFormat_H265,
     AliRtcVideoFormat_File,
 };
 
+/**
+ * @brief 视频编码器类型
+ */
+typedef NS_ENUM(NSInteger, AliRtcVideoCodecKindType) {
+    AliRtcVideoCodecKind_UNKNOW = -1,
+    AliRtcVideoCodecKind_Encoder = 0,
+    AliRtcVideoCodecKind_Decoder,
+};
 
 /**
  * @brief 视频数据类型
@@ -377,6 +386,8 @@ typedef NS_ENUM(NSInteger, AliRtcAudioEffectVoiceChangerMode) {
     AliRtcAudioEffectvVoiceChangerR_HOWL,
     /** 电音 */
     AliRtcAudioEffectvVoiceChangerR_ELECTRONIC,
+    /** 留声机 */
+    AliRtcAudioEffectvVoiceChangerR_PHONOGRAPH,
     /** 占位符 */
     AliRtcAudioEffectvVoiceChanger_MAX,
 };
@@ -1612,6 +1623,16 @@ typedef NS_ENUM(NSUInteger, AliRtcLiveTranscodingCropMode) {
 };
 
 /**
+* @brief 旁路直播视频编码器
+*/
+typedef NS_ENUM(NSUInteger, AliRtcLiveTranscodingVideoCodec) {
+    /** H.264 */
+    AliRtcLiveTranscodingVideoCodec_H264 = 1,
+    /** H.265 */
+    AliRtcLiveTranscodingVideoCodec_H265 = 2
+};
+
+/**
 * @brief 旁路直播时钟格式
 */
 ALI_RTC_API @interface AliRtcLiveTranscodingClockWidget : NSObject
@@ -1643,6 +1664,7 @@ ALI_RTC_API @interface AliRtcLiveTranscodingEncodeParam : NSObject
 @property (nonatomic, assign) int videoFramerate; //[1,60]
 @property (nonatomic, assign) int videoBitrate; //[1kbps,10000kbps]
 @property (nonatomic, assign) int videoGop; //[1,60]
+@property (nonatomic, assign) AliRtcLiveTranscodingVideoCodec videoCodec;
 @property (nonatomic, assign) AliRtcLiveTranscodingAudioSampleRate audioSamplerate;
 @property (nonatomic, assign) int audioBitrate; //[8kbps,500kbps]
 @property (nonatomic, assign) int audioChannels; //[1,2]
@@ -3976,6 +3998,24 @@ ALI_RTC_API @interface AliRtcEngine : NSObject <AliRtcEngineDelegate>
 - (void)setLogLevel:(AliRtcLogLevel)logLevel;
 
 /**
+ * @brief 设置是否上传日志文件，默认上传
+ * @param enable
+ *  - true 上传日志文件
+ *  - false 不上传日志文件
+ *  @note 入会前调用此接口，请在SetLogLevel接口调用之后立即调用本接口。
+ */
+- (void)enableUploadLog:(BOOL)enable;
+
+/**
+ * @brief 设置是否上传业务埋点，默认上传
+ * @param enable
+ *  - true 上传业务埋点
+ *  - false 不上传业务埋点
+ * @note 在调用{@link Create}创建AliRtcEngine实例后，应立即调用此接口，避免预期之外的埋点上传
+ */
+- (void)enableStatsReport:(BOOL)enable;
+
+/**
  * @brief 检查camera是否打开
  * @return
  * - YES: 表示摄像头已打开
@@ -5261,6 +5301,23 @@ NS_ASSUME_NONNULL_END
  * - 与虚拟背景为替换关系，如开启背景虚化开关后再次开启虚拟背景，则只有虚拟背景效果；
 */
 - (int)enableBackgroundBlur:(BOOL)enable blurDegree:(uint32_t)blurDegree;
+
+/**
+ * @brief 获取当前使用的编码器/解码器类型
+ * @details 提供接口获取当前使用的编码器类型，某些场景会改变编码器类型，因此获取的值只说明当前值，不表示后续不变更；
+ * @param codec_kind 编码器类型 AliRtcVideoCodecKind_Encoder/AliRtcVideoCodecKind_Decoder
+ * @param videoFormat  获取的编码类型 可能的返回值(AliRtcVideoFormat_H264/AliRtcVideoFormat_H265/AliRtcVideoFormat_UNKNOW)
+ * @return
+ * - 0: 成功
+ * - < 0: 失败 详见 {@link AliRtcPluginErrorCode}；
+ *   - AliRtcPluginErrorInitError： 参数错误，请检查codec_kind取值；
+ *
+ * @note
+ * - AliRtcVideoCodecKind_Encoder/AliRtcVideoCodecKind_Decoder；
+ * - 可重复调用，获取当前使用的编码器类型和支持的最高级的解码器类型，因所有的RTC引擎都集成了hevc解码器，
+ * - 获取解码器类型，会返回AliRtcVideoFormat_H265；
+*/
+- (int)getVideoCodecType:(AliRtcVideoCodecKindType)codec_kind videoFormat:(AliRtcVideoFormat * _Nonnull)videoFormat ;
 
 
 /** @} */

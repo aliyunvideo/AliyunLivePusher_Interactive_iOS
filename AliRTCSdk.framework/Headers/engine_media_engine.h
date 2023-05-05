@@ -41,6 +41,16 @@ namespace AliRTCSdk
         AliEngineVideoTrackBoth   = 3,
     } AliEngineVideoTrack;
 
+    /**
+     * @brief 视频编码类型类型
+     */
+    typedef enum {
+        /** 编码器 */
+        AliEngineVideoEncoderType = 0,
+        /** 解码器 */
+        AliEngineVideoDecoderType = 1,
+    } AliEngineVideoCodecKindType;
+
 
     /**
      * @brief 相机流类型
@@ -99,7 +109,8 @@ namespace AliRTCSdk
         AliEngineVideoFormatTextureOES  = 11,
         AliEngineVideoFormatTexture2D  = 12,
         AliEngineVideoFormatH264  = 13,
-        AliEngineVideoFormatFile = 14,
+        AliEngineVideoFormatH265  = 14,
+        AliEngineVideoFormatFile = 15,
     } AliEngineVideoFormat;
 
     /**
@@ -932,7 +943,6 @@ namespace AliRTCSdk
        * - 非0: 失败
        */
       virtual int RemoveExternalAudioStream(int streamId) = 0;
-
     protected:
       virtual ~IAliEngineMediaEngine() {}
     };
