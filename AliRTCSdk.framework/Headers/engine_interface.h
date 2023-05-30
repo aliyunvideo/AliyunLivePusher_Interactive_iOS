@@ -1973,7 +1973,6 @@ namespace AliRTCSdk
         int width;
         int height;
         int zOrder;
-        AliEngineLiveTranscodingStreamType streamType;
         AliEngineLiveTranscodingSourceType sourceType;
         AliEngineLiveTranscodingSegmentType segmentType = AliEngineLiveTranscodingNoBody;
         AliEngineLiveTranscodingImageArray images;
