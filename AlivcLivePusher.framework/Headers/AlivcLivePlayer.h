@@ -258,23 +258,6 @@
  */
 - (void)onPlayerStatistics:(AlivcLivePlayer *)player statsInfo:(AlivcLivePlayerStatsInfo*)statistics;
 
-
-/**
- * @brief SEI回调
- * @param player 连麦播放引擎对象
- * @param payloadType 类型
- * @param data 数据
- */
-
-/****
- * @brief SEI callback
- * @param player Live interaction player engine object
- * @param payloadType Type
- * @param data Data
- */
-- (void)onReceiveSeiMessage:(AlivcLivePlayer *)player payloadType:(int)payloadType data:(NSData *)data;
-
-
 @end
 
 /** @} */

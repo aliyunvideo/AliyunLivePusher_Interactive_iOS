@@ -1552,15 +1552,28 @@ typedef NS_ENUM(NSUInteger, AliRtcLiveTranscodingSourceType) {
 };
 
 /**
- * @brief 旁路直播用户自定义窗格信息
+* @brief 旁路直播转推流模式
 */
-ALI_RTC_API @interface AliRtcLiveTranscodingPane : NSObject
+typedef NS_ENUM(NSUInteger, AliRtcLiveTranscodingStreamType) {
+    /** 原始流 */
+    AliRtcLiveTranscodingOrigin = 0,
+    /** 音频 */
+    AliRtcLiveTranscodingAudio = 1,
+    /** 视频 */
+    AliRtcLiveTranscodingVideo = 2
+};
+
+/**
+ * @brief 旁路直播用户自定义流信息
+*/
+ALI_RTC_API @interface AliRtcLiveTranscodingUser : NSObject
 @property (nonatomic, assign) int x;
 @property (nonatomic, assign) int y;
 @property (nonatomic, assign) int width;
 @property (nonatomic, assign) int height;
 @property (nonatomic, assign) int zOrder;
 @property (nonatomic, copy) NSString *_Nonnull userId;
+@property (nonatomic, assign) AliRtcLiveTranscodingStreamType streamType;
 @property (nonatomic, assign) AliRtcLiveTranscodingSourceType sourceType;
 @property (nonatomic, assign) AliRtcLiveTranscodingSegmentType segmentType;
 @property (nonatomic, copy) NSArray<AliRtcLiveTranscodingImage *> *_Nullable images;
@@ -1588,18 +1601,6 @@ typedef NS_ENUM(NSUInteger, AliRtcLiveTranscodingMixMode) {
     AliRtcLiveTranscodingSINGLE = 0,
     /** 混流模式 */
     AliRtcLiveTranscodingMIX = 1
-};
-
-/**
-* @brief 旁路直播转推流模式
-*/
-typedef NS_ENUM(NSUInteger, AliRtcLiveTranscodingStreamType) {
-    /** 原始流 */
-    AliRtcLiveTranscodingOrigin = 0,
-    /** 音频 */
-    AliRtcLiveTranscodingAudio = 1,
-    /** 视频 */
-    AliRtcLiveTranscodingVideo = 2
 };
 
 /**
@@ -1716,7 +1717,7 @@ ALI_RTC_API @interface AliRtcLiveTranscodingMixParam : NSObject
 /*! 旁路直播自定义编码参数 */
 @property (nonatomic, strong) AliRtcLiveTranscodingEncodeParam *_Nullable encodeParam;
 /*! 旁路直播用户列表 */
-@property (nonatomic, strong) NSArray<AliRtcLiveTranscodingPane *> *_Nullable users;
+@property (nonatomic, strong) NSArray<AliRtcLiveTranscodingUser *> *_Nullable users;
 /*! 背景色 */
 @property (nonatomic, assign) int backgroundColor; //0xRRGGBB
 /*! 背景图片列表 */
