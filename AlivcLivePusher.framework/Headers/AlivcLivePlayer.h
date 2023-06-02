@@ -101,39 +101,51 @@
 
 /**
  * @brief 暂停播放音频流
+ * * @return
+ * - 0: 成功
+ * - 非0: 失败
  */
 
 /****
  * @brief Pause playback of an audio stream.
  */
-- (void)pauseAudioPlaying;
+- (int)pauseAudioPlaying;
 
 /**
  * @brief 恢复播放音频流
+ * * @return
+ * - 0: 成功
+ * - 非0: 失败
  */
 
 /****
  * @brief Resume playback of an audio stream.
  */
-- (void)resumeAudioPlaying;
+- (int)resumeAudioPlaying;
 
 /**
  * @brief 暂停播放视频流
+ * * @return
+ * - 0: 成功
+ * - 非0: 失败
  */
 
 /****
  * @brief Pause playback of a video stream.
  */
-- (void)pauseVideoPlaying;
+- (int)pauseVideoPlaying;
 
 /**
  * @brief 恢复播放视频流
+ * * @return
+ * - 0: 成功
+ * - 非0: 失败
  */
 
 /****
  * @brief Resume playback of a video stream.
  */
-- (void)resumeVideoPlaying;
+- (int)resumeVideoPlaying;
 
 /**
  * @brief 设置播放音量
