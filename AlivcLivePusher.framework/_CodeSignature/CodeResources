@@ -10,19 +10,19 @@
 		</data>
 		<key>Headers/AlivcLivePlayer.h</key>
 		<data>
-		wqAq2ffzoCo8cVSCIPL6i86043s=
+		FheLObwxPGsFbl3fV+WCHSnfxiI=
 		</data>
 		<key>Headers/AlivcLivePushConfig.h</key>
 		<data>
-		+7ZbDquh6TUysHnixHhSdpwNv4o=
+		bHWV5IPAjN+7JTFPARY3JLNUJJA=
 		</data>
 		<key>Headers/AlivcLivePushConstants.h</key>
 		<data>
-		HHxfrYDPzaQP7Benqca0WKFV8Gc=
+		5VVNBSqoYywn858FpDUqHaifqQc=
 		</data>
 		<key>Headers/AlivcLivePushDef.h</key>
 		<data>
-		X89hXcXWXO0G12ZQ98AthNk+WRY=
+		qrGepY1p4a5ZFekx9a88KopKb9A=
 		</data>
 		<key>Headers/AlivcLivePushError.h</key>
 		<data>
@@ -34,7 +34,7 @@
 		</data>
 		<key>Headers/AlivcLivePusher.h</key>
 		<data>
-		wsUCYFL/jgmZWYT7nGxXZhzPIv0=
+		gRz5WqTRWFlh8M610Z0NnJ+R51A=
 		</data>
 		<key>Headers/AlivcLivePusherHeader.h</key>
 		<data>
@@ -66,44 +66,44 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			wqAq2ffzoCo8cVSCIPL6i86043s=
+			FheLObwxPGsFbl3fV+WCHSnfxiI=
 			</data>
 			<key>hash2</key>
 			<data>
-			BoqFrLKBEdBhdr2LhwM02RnJFu0Iyn7bEa2IF7r9jZE=
+			n/4JW0byeQGzqqWzYZX0OOB7MYAk04xJNsPun1Ukq1I=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePushConfig.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			+7ZbDquh6TUysHnixHhSdpwNv4o=
+			bHWV5IPAjN+7JTFPARY3JLNUJJA=
 			</data>
 			<key>hash2</key>
 			<data>
-			o1VObMzIGoZNY6ez4qkcbaLSSERmExMysVqufSpQKUA=
+			r+bIa38iJJe2ZbpFMvRvChWw0FlXaSKZYkeCRAu54F8=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePushConstants.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			HHxfrYDPzaQP7Benqca0WKFV8Gc=
+			5VVNBSqoYywn858FpDUqHaifqQc=
 			</data>
 			<key>hash2</key>
 			<data>
-			eEKyC798T9fgzcq06lVncKynXccTAEXhpONKNMjEXUs=
+			tGgNlprQvFFVmxXz78WB+Ruh29jWEFhVv7w2FBra/eM=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePushDef.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			X89hXcXWXO0G12ZQ98AthNk+WRY=
+			qrGepY1p4a5ZFekx9a88KopKb9A=
 			</data>
 			<key>hash2</key>
 			<data>
-			hCKXz0jdGPIifNqpGzrD35UoJNHxA0KBMqyo4sgrmnc=
+			O6I5cOUgOaDZgq/WHzAJplGpMBuISSY40pj2/yqqGjk=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePushError.h</key>
@@ -132,11 +132,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			wsUCYFL/jgmZWYT7nGxXZhzPIv0=
+			gRz5WqTRWFlh8M610Z0NnJ+R51A=
 			</data>
 			<key>hash2</key>
 			<data>
-			GWtxTh84BGgXdZgW/N+hXkSRz7F+kHeCwugNRovBlUg=
+			5gNBA4sFS5njIk7NS6bZ+5/c+tVGXDk3Y9mcc1oy9s8=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePusherHeader.h</key>

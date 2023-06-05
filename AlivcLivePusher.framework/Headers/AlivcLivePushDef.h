@@ -131,15 +131,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) int zOrder;
 
-/**
- * 混入的流类型
- */
-
-/****
- * mixed-in stream type
- */
-@property (nonatomic, assign) AlivcLiveMixStreamType streamType;
-
 @end
 
 /**

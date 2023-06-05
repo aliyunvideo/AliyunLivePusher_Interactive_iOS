@@ -101,51 +101,39 @@
 
 /**
  * @brief 暂停播放音频流
- * * @return
- * - 0: 成功
- * - 非0: 失败
  */
 
 /****
  * @brief Pause playback of an audio stream.
  */
-- (int)pauseAudioPlaying;
+- (void)pauseAudioPlaying;
 
 /**
  * @brief 恢复播放音频流
- * * @return
- * - 0: 成功
- * - 非0: 失败
  */
 
 /****
  * @brief Resume playback of an audio stream.
  */
-- (int)resumeAudioPlaying;
+- (void)resumeAudioPlaying;
 
 /**
  * @brief 暂停播放视频流
- * * @return
- * - 0: 成功
- * - 非0: 失败
  */
 
 /****
  * @brief Pause playback of a video stream.
  */
-- (int)pauseVideoPlaying;
+- (void)pauseVideoPlaying;
 
 /**
  * @brief 恢复播放视频流
- * * @return
- * - 0: 成功
- * - 非0: 失败
  */
 
 /****
  * @brief Resume playback of a video stream.
  */
-- (int)resumeVideoPlaying;
+- (void)resumeVideoPlaying;
 
 /**
  * @brief 设置播放音量
@@ -269,6 +257,23 @@
  * @note videoBitrate in statistics is the total video receiving bit rate
  */
 - (void)onPlayerStatistics:(AlivcLivePlayer *)player statsInfo:(AlivcLivePlayerStatsInfo*)statistics;
+
+
+/**
+ * @brief SEI回调
+ * @param player 连麦播放引擎对象
+ * @param payloadType 类型
+ * @param data 数据
+ */
+
+/****
+ * @brief SEI callback
+ * @param player Live interaction player engine object
+ * @param payloadType Type
+ * @param data Data
+ */
+- (void)onReceiveSeiMessage:(AlivcLivePlayer *)player payloadType:(int)payloadType data:(NSData *)data;
+
 
 @end
 
