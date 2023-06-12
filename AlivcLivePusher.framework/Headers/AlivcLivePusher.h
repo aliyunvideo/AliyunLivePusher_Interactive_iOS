@@ -424,14 +424,14 @@ AlivcLivePusherAudioSampleDelegate;
 
 /**
  * @brief 对焦
- * @param point 对焦的点
+ * @param point 对焦的点，point.x和point.y的取值是(0,1)，表示当前点相对于渲染view的相对位置
  * @param autoFocus 是否自动对焦
  * @return 0:success  非0:failure
  */
 
 /****
  * @brief Configure focus
- * @param point The focus point
+ * @param point The focus point The values ​​of point.x and point.y are (0,1), indicating the relative position of the current point relative to the rendering view
  * @param autoFocus Whether to enable autofocus
  * @return
  *  0:success
@@ -1845,6 +1845,21 @@ AlivcLivePusherAudioSampleDelegate;
  */
 - (void)onSetLiveMixTranscodingConfig:(AlivcLivePusher *)pusher status:(BOOL)isSuccess message:(NSString *)msg;
 
+
+/**
+ * @brief 被服务侧强制踢掉回调
+ * 注：此回调只在livePushMode为AlivcLivePushInteractiveMode，即只在直播SDK工作在互动模式下才可以使用
+ * @param pusher 推流引擎对象
+ * @param code 具体被踢掉原因
+ */
+
+/****
+ * @brief The reason for being kicked out by the server callback
+ * Note: This callback is available only when livePushMode is set to AlivcLivePushInteractiveMode, that is, when Push SDK is working in interactive mode.
+ * @param pusher pusher The live pusher engine object
+ * @param code The specific reason for being kicked out
+ */
+- (void)onKickedOutByServer:(AlivcLivePusher *)pusher reason:(AlivcLivePushKickedOutType)code;
 
 @end
 

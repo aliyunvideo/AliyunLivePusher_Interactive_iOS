@@ -440,12 +440,15 @@
  * @brief 视频硬编码方式
  * @details（当videoEncoderMode设置为AlivcLivePushVideoEncoderModeHard时，有两种可选的视频硬件编码方式：H264和HEVC(H265)）
  * default：AlivcLivePushVideoEncoderModeHardCodecH264，使用H264进行硬件编码
+ * @note 当前SDK暂时只支持在livePushMode = AlivcLivePushBasicMode 模式下设置AlivcLivePushVideoEncoderModeHardCodecHEVC，互动模式暂不支持设置HEVC
  */
 
 /****
  * @brief The video hardware encoding format.
  * @details When videoEncoderMode is set to AlivcLivePushVideoEncoderModeHard, there are two optional video hardware encoding formats: H.264 and HEVC (H.265).
  * default：AlivcLivePushVideoEncoderModeHardCodecH264
+ * @note The SDK allows you to set AlivcLivePushVideoEncoderModeHardCodecHEVC when livePushMode is
+ * set to AlivcLivePushBasicMode, but not when livePushMode is set to AlivcLivePushInteractiveMode.
  */
 @property (nonatomic, assign)AlivcLivePushVideoEncoderModeHardCodec videoHardEncoderCodec;
 
@@ -620,6 +623,16 @@
  * @brief The SDK quality monitoring level. For embedment scenarios, you can specify specific monitoring metrics.
  */
 @property (nonatomic, assign) AlivcLivePushMonitorLevel monitorLevel;
+
+/**
+ * @brief 互动模式下默认回调pixbuffer，通过enableLocalVideoTexture可以指定纹理回调
+ */
+
+/****
+ * @brief when livePushMode is set to AlivcLivePushBasicMode,, pixbuffer is called back by default, and texture callback can be specified by enableLocalVideoTexture
+ */
+
+@property (nonatomic, assign) BOOL enableLocalVideoTexture;
 
 /**
  * @brief init 分辨率 其余值为默认值
