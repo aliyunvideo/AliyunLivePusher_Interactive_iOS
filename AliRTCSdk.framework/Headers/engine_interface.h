@@ -2313,7 +2313,14 @@ namespace AliRTCSdk
          * @details 应用调用 {@link AliEngine::PublishStreamByRtsUrl} 方法时，该回调表示推流成功/失败
          * @param result 推流结果，成功返回0，失败返回错误码
          */
-        void OnPublishStreamByRtsUrlResult(const char* rts_url, int result) {};
+        virtual void OnPublishStreamByRtsUrlResult(const char* rts_url, int result) {};
+        
+        /**
+         * @brief 使用RTS URL结束推流结果
+         * @details 应用调用 {@link AliEngine::PublishStreamByRtsUrl} 方法时，该回调表示结束推流成功/失败
+         * @param result 推流结果，成功返回0，失败返回错误码
+         */
+        virtual void OnUnPublishStreamByRtsUrlResult(const char* rts_url, int result) {};
 
         /**
          * @brief 远端用户的音视频流发生变化回调
@@ -3318,6 +3325,14 @@ namespace AliRTCSdk
          * @note 该接口用于停止推送本地音视频流
          */
         virtual int StopPublishStreamByRtsUrl(const char* rtsUrl) = 0;
+
+        /**
+         * @brief Rts场景下切换屏幕共享到摄像头推流
+         * @return 
+         * - 0: 成功
+         * - 非0: 失败
+         */
+        virtual int SwitchScreenToCamera() = 0;
 
         /**
         * @brief 停止/恢复本地音频数据发送
@@ -4741,7 +4756,20 @@ namespace AliRTCSdk
          * - <0: 失败
         */
         virtual int StopScreenShare() = 0;
-
+        /**
+         * @brief 暂停屏幕分享，仅暂停采集
+         * @return
+         * - 0: 成功
+         * - <0: 失败
+        */
+        virtual int PauseScreenShare() = 0;
+        /**
+         * @brief 重新开启屏幕分享
+         * @return
+         * - 0: 成功
+         * - <0: 失败
+        */
+        virtual int ResumeScreenShare() = 0;
         /**
          * @brief 更新屏幕分享配置
          * @param config 屏幕分享配置，详见 {@link AliEngineScreenShareConfig}

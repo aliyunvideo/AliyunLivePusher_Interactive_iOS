@@ -332,6 +332,8 @@ typedef NS_ENUM(NSInteger, AliRtcVideoCodecKindType) {
 typedef NS_ENUM(NSInteger, AliRtcBufferType) {
     /** YUV裸数据 */
     AliRtcBufferType_Raw_Data = 0,
+    /** opengl texture */
+    AliRtcBufferType_Texture,
     /** CVPixelBuffer数据 */
     AliRtcBufferType_CVPixelBuffer,
     /** 文件路径 */

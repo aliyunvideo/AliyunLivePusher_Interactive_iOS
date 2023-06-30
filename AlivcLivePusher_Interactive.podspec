@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "AlivcLivePusher_Interactive"
-  s.version      = "6.0.7"
+  s.version      = "6.2.0"
   s.summary      = "AlivcLivePusher_Interactive_iOS"
   s.description  = <<-DESC
                    It's an SDK for aliyun live pusher for interactive, which implement by Objective-C.

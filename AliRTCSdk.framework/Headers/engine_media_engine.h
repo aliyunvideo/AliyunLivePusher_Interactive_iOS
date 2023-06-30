@@ -121,6 +121,8 @@ namespace AliRTCSdk
         AliEngineBufferTypeRawData          = 0,
         /** 纹理格式 */
         AliEngineBufferTypeTexture,
+        /** apple cvPixelBuffer */
+        AliEngineBufferTypeCVPixelBuffer,
         /** 文件路径格式 */
         AliEngineBufferTypeFile,
     } AliEngineBufferType;

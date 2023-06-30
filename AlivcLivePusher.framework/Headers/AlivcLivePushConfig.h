@@ -440,15 +440,12 @@
  * @brief 视频硬编码方式
  * @details（当videoEncoderMode设置为AlivcLivePushVideoEncoderModeHard时，有两种可选的视频硬件编码方式：H264和HEVC(H265)）
  * default：AlivcLivePushVideoEncoderModeHardCodecH264，使用H264进行硬件编码
- * @note 当前SDK暂时只支持在livePushMode = AlivcLivePushBasicMode 模式下设置AlivcLivePushVideoEncoderModeHardCodecHEVC，互动模式暂不支持设置HEVC
  */
 
 /****
  * @brief The video hardware encoding format.
  * @details When videoEncoderMode is set to AlivcLivePushVideoEncoderModeHard, there are two optional video hardware encoding formats: H.264 and HEVC (H.265).
  * default：AlivcLivePushVideoEncoderModeHardCodecH264
- * @note The SDK allows you to set AlivcLivePushVideoEncoderModeHardCodecHEVC when livePushMode is
- * set to AlivcLivePushBasicMode, but not when livePushMode is set to AlivcLivePushInteractiveMode.
  */
 @property (nonatomic, assign)AlivcLivePushVideoEncoderModeHardCodec videoHardEncoderCodec;
 
@@ -629,10 +626,19 @@
  */
 
 /****
- * @brief when livePushMode is set to AlivcLivePushBasicMode,, pixbuffer is called back by default, and texture callback can be specified by enableLocalVideoTexture
+ * @brief when livePushMode is set to AlivcLivePushLiveMode, pixbuffer is called back by default, and texture callback can be specified by enableLocalVideoTexture
  */
 
 @property (nonatomic, assign) BOOL enableLocalVideoTexture;
+
+/**
+ * @brief 互动模式下enableLocalVideoTexture指定纹理回调后，可以设置enableLocalVideoRawBuffer打开视频裸数据的回调，格式是I420
+ */
+
+/****
+ * @brief After enableLocalVideoTexture specifies the texture callback in interactive mode, enableLocalVideoRawBuffer can be set to enable the callback of video raw data, the format is I420
+ */
+@property (nonatomic, assign) BOOL enableLocalVideoRawBuffer;
 
 /**
  * @brief init 分辨率 其余值为默认值
