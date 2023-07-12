@@ -10,7 +10,7 @@
 		</data>
 		<key>Headers/AlivcLivePlayer.h</key>
 		<data>
-		suVb94DzCuokKHMqNv+bFkcfaAY=
+		nzghkpPXfXjiWTLE1vI3/wmEgLg=
 		</data>
 		<key>Headers/AlivcLivePushConfig.h</key>
 		<data>
@@ -34,7 +34,7 @@
 		</data>
 		<key>Headers/AlivcLivePusher.h</key>
 		<data>
-		/JP6GYwUisLSx7onVTwuEy4JtQI=
+		fs1ImrfAKfS+L4Wvg5rQBvadqt8=
 		</data>
 		<key>Headers/AlivcLivePusherHeader.h</key>
 		<data>
@@ -42,7 +42,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		4ssSdanUZwZ7N8zayYT+sdWPQxg=
+		hIpM1c3nf8chzTkTizadXtWjskI=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -66,11 +66,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			suVb94DzCuokKHMqNv+bFkcfaAY=
+			nzghkpPXfXjiWTLE1vI3/wmEgLg=
 			</data>
 			<key>hash2</key>
 			<data>
-			dQCu+Uw5HY0AN8pKSNzV4ykcK+fzSccnxJIOvbaNH0Q=
+			EhkLSzSC8y5eY8ECF9eTPnH9wTlKLVdDwQdG2hmhRho=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePushConfig.h</key>
@@ -132,11 +132,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			/JP6GYwUisLSx7onVTwuEy4JtQI=
+			fs1ImrfAKfS+L4Wvg5rQBvadqt8=
 			</data>
 			<key>hash2</key>
 			<data>
-			n/yzq5PV9g8hLx6pHa49OCcnbXGeUI9agiuzOvdVRdI=
+			Qd0lbeGB0d/aDm2mpYYLenImLUeGvg0MAIFLRKumVvo=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePusherHeader.h</key>

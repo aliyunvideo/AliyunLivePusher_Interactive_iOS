@@ -287,6 +287,21 @@
 - (void)onReceiveSeiMessage:(AlivcLivePlayer *)player payloadType:(int)payloadType data:(NSData *)data;
 
 
+/**
+ * @brief 播放音量和是否正在说话的反馈回调
+ * @param player 连麦播放引擎对象
+ * @param volume 音量大小
+ * @param isSpeaking 是否正在说话
+ */
+
+/****
+ * @brief  callback for playback volume and whether is speaking
+ * @param player player Live interaction player engine object
+ * @param volume volume
+ * @param isSpeaking is speaking
+ */
+- (void)onPlayoutVolumeUpdate:(AlivcLivePlayer *)player volume:(int)volume speechState:(BOOL)isSpeaking;
+
 @end
 
 /** @} */
