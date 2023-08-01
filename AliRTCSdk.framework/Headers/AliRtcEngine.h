@@ -2080,6 +2080,60 @@ ALI_RTC_API @interface AliRtcVideoExternalEncoderParameter : NSObject
 
 /** @} AliRtcDef_ios */
 
+/**
+ * @brief 本地设备类型
+ */
+typedef NS_ENUM(NSInteger, AliRtcLocalDeviceType) {
+    /** 未知设备类型 */
+    AliRtcLocalDeviceTypeUnknown = 0,
+    /** 麦克风设备 */
+    AliRtcLocalDeviceTypeMic = 1,
+    /** 扬声器设备 */
+    AliRtcLocalDeviceTypeSpeaker = 2,
+    /** 音频设备 */
+    AliRtcLocalDeviceTypeAudioDevice = 3,
+    /** 摄像头设备 */
+    AliRtcLocalDeviceTypeCamera = 4,
+    /** 显示设备 */
+    AliRtcLocalDeviceTypeDisplay = 5,
+    /** 视频设备 */
+    AliRtcLocalDeviceTypeVideoDevice = 6
+};
+
+/**
+ * @brief 本地设备异常类型
+ */
+typedef NS_ENUM(NSInteger, AliRtcLocalDeviceExceptionType) {
+    /** 未知异常类型 */
+    AliRtcLocalDeviceExceptionTypeUnknown = 0,
+    /** 麦克风打开失败 */
+    AliRtcLocalDeviceExceptionTypeMicOpenFail = 1,
+    /** 麦克风被打断 */
+    AliRtcLocalDeviceExceptionTypeMicInterrupt = 2,
+    /** 麦克风无权限 */
+    AliRtcLocalDeviceExceptionTypeMicAuthFail = 3,
+    /** 无可用麦克风 */
+    AliRtcLocalDeviceExceptionTypeMicNotAvailable = 4,
+    /** 扬声器打开失败 */
+    AliRtcLocalDeviceExceptionTypeSpeakerOpenFail = 5,
+    /** 扬声器被打断 */
+    AliRtcLocalDeviceExceptionTypeSpeakerInterrupt = 6,
+    /** 无可用扬声器 */
+    AliRtcLocalDeviceExceptionTypeSpeakerNotAvailable = 7,
+    /** 音频设备异常 */
+    AliRtcLocalDeviceExceptionTypeAudioDeviceException = 8,
+    /** 摄像头打开失败 */
+    AliRtcLocalDeviceExceptionTypeCameraOpenFail = 9,
+    /** 摄像头被打断 */
+    AliRtcLocalDeviceExceptionTypeCameraInterrupt = 10,
+    /** 摄像头无权限 */
+    AliRtcLocalDeviceExceptionTypeCameraAuthFail = 11,
+    /** 显示设备异常 */
+    AliRtcLocalDeviceExceptionTypeDisplayExecption = 12,
+    /** 视频设备异常 */
+    AliRtcLocalDeviceExceptionTypeVideoDeviceException = 13
+};
+
 #pragma mark - 回调
 /**
  * @defgroup AliRtcEngineDelegate_ios AliRtcEngineDelegate
@@ -2817,6 +2871,14 @@ ALI_RTC_API @protocol AliRtcEngineDelegate <NSObject>
  */
 - (void)onRequestVideoExternalEncoderFrame:(AliRtcVideoTrack)trackType frameType:(AliRtcVideoEncodedFrameType)frameType;
 
+/**
+ * @brief 本地设备异常回调
+ * @param deviceType 设备类型, 参考{@link AliRtcLocalDeviceType}
+ * @param exceptionType 设备异常类型, 参考{@link AliRtcLocalDeviceExceptionType}
+ * @param msg 异常时携带的信息
+ * @note 此回调标识了内部无法恢复了设备异常，收到此回调时用户需要检查设备是否可用
+ */
+- (void)onLocalDeviceException:(AliRtcLocalDeviceType)deviceType exceptionType:(AliRtcLocalDeviceExceptionType)exceptionType message:(NSString *_Nullable)msg;
 
 @end
 /** @} AliRtcEngineDelegate_ios AliRtcEngineDelegate */

@@ -1809,6 +1809,61 @@ namespace AliRTCSdk
     };
 
     /**
+     * @brief 本地设备类型
+     */
+    enum AliEngineLocalDeviceType {
+        /** 未知设备类型 */
+        AliEngineLocalDeviceTypeUnknown = 0,
+        /** 麦克风设备 */
+        AliEngineLocalDeviceTypeMic = 1,
+        /** 扬声器设备 */
+        AliEngineLocalDeviceTypeSpeaker = 2,
+        /** 音频设备 */
+        AliEngineLocalDeviceTypeAudioDevice = 3,
+        /** 摄像头设备 */
+        AliEngineLocalDeviceTypeCamera = 4,
+        /** 显示设备 */
+        AliEngineLocalDeviceTypeDisplay = 5,
+        /** 视频设备 */
+        AliEngineLocalDeviceTypeVideoDevice = 6
+    };
+
+    /**
+     * @brief 本地设备异常类型
+     */
+    enum AliEngineLocalDeviceExceptionType {
+        /** 未知异常类型 */
+        AliEngineLocalDeviceExceptionTypeUnknown = 0,
+        /** 麦克风打开失败 */
+        AliEngineLocalDeviceExceptionTypeMicOpenFail = 1,
+        /** 麦克风被打断 */
+        AliEngineLocalDeviceExceptionTypeMicInterrupt = 2,
+        /** 麦克风无权限 */
+        AliEngineLocalDeviceExceptionTypeMicAuthFail = 3,
+        /** 无可用麦克风 */
+        AliEngineLocalDeviceExceptionTypeMicNotAvailable = 4,
+        /** 扬声器打开失败 */
+        AliEngineLocalDeviceExceptionTypeSpeakerOpenFail = 5,
+        /** 扬声器被打断 */
+        AliEngineLocalDeviceExceptionTypeSpeakerInterrupt = 6,
+        /** 无可用扬声器 */
+        AliEngineLocalDeviceExceptionTypeSpeakerNotAvailable = 7,
+        /** 音频设备异常 */
+        AliEngineLocalDeviceExceptionTypeAudioDeviceException = 8,
+        /** 摄像头打开失败 */
+        AliEngineLocalDeviceExceptionTypeCameraOpenFail = 9,
+        /** 摄像头被打断 */
+        AliEngineLocalDeviceExceptionTypeCameraInterrupt = 10,
+        /** 摄像头无权限 */
+        AliEngineLocalDeviceExceptionTypeCameraAuthFail = 11,
+        /** 显示设备异常 */
+        AliEngineLocalDeviceExceptionTypeDisplayExecption = 12,
+        /** 视频设备异常 */
+        AliEngineLocalDeviceExceptionTypeVideoDeviceException = 13
+    };
+
+
+    /**
     * @brief 旁路直播自定义编码参数
     */
     struct AliEngineLiveTranscodingEncodeParam {
@@ -2898,7 +2953,15 @@ namespace AliRTCSdk
          * @param result SDK 调用 API 的调用结果.
          */
         virtual void OnCalledApiExecuted(int error, const char *api, const char *result){};
-
+        
+        /**
+         * @brief 本地设备异常回调
+         * @param deviceType 设备类型, 参考{@link AliEngineLocalDeviceType}
+         * @param exceptionType 设备异常类型, 参考{@link AliEngineLocalDeviceExceptionType}
+         * @param msg 异常时携带的信息
+         * @note 此回调标识了内部无法恢复了设备异常，收到此回调时用户需要检查设备是否可用
+         */
+        virtual void OnLocalDeviceException(AliEngineLocalDeviceType deviceType, AliEngineLocalDeviceExceptionType exceptionType, const char* msg){};
     };
 
     /**
@@ -4830,11 +4893,12 @@ namespace AliRTCSdk
          * @brief 开启/关闭系统声音采集推送
          * @param enable true为开启, false为关闭
          * @param path path为空，则采集整个系统的声音；path为exe程序路径，则启动此程序并采集其声音
+		 * @param device_id path为空，则采集默认声卡设备的声音；否则采集device_id此设备的播放的声音
          * @return
          * - 0: 成功
          * - <0: 失败
          */
-        virtual int EnableSystemAudioRecording(bool enable, const char *path = nullptr) = 0;
+        virtual int EnableSystemAudioRecording(bool enable, const char *path = nullptr, const char *device_id = nullptr) = 0;
 
         /**
          * @brief 当前是否开启系统声音采集推送

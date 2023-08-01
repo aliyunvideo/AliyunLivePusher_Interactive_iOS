@@ -642,12 +642,12 @@ AlivcLivePusherAudioSampleDelegate;
 
 
 /**
- * @brief 设置推流分辨率，只在预览模式下生效，推流中不能设置
+ * @brief 设置推流分辨率
  * @param resolution 推流分辨率
  */
 
 /****
- * @brief Specify the resolution, which takes effect only in preview mode. You cannot specify this parameter during stream push.
+ * @brief Specify the resolution, which takes effect only in preview mode
  * @param resolution The resolution of the ingested stream
  */
 - (void)setResolution:(AlivcLivePushResolution)resolution;
@@ -2118,7 +2118,7 @@ AlivcLivePusherAudioSampleDelegate;
  */
 - (void)onCreate:(AlivcLivePusher *)pusher context:(void*)context;
 /**
- * @brief 通知外置滤镜处理回调，当前版本SDK在非互动模式下需要使用onProcess处理美颜
+ * @brief 通知外置滤镜处理回调(纹理回调)
  * @param pusher 推流引擎对象
  * @param texture 纹理ID
  * @param width 图像宽
