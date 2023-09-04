@@ -170,6 +170,18 @@
  */
 - (int)setPlayoutVolume:(NSInteger)volume;
 
+/**
+ * @brief  截取播放过程中的视频画面
+ * * @return
+ * - 0: 成功
+ * - 非0: 失败
+ */
+
+/****
+ * @brief snapshot the video screen during playback
+ */
+- (int)snapshot;
+
 @end
 
 /** @} */
@@ -301,6 +313,36 @@
  * @param isSpeaking is speaking
  */
 - (void)onPlayoutVolumeUpdate:(AlivcLivePlayer *)player volume:(int)volume speechState:(BOOL)isSpeaking;
+
+/**
+ * @brief 截图回调
+ * @param player 连麦播放引擎对象
+ * @param image 截图
+ */
+
+/****
+ * @brief Snapshot callbacks
+ * @param pusher player Live interaction player engine object
+ * @param image
+ */
+- (void)onSnapshot:(AlivcLivePlayer *)player image:(UIImage *)image;
+
+/**
+ * @brief 播放器分辨率变化通知
+ *
+ * @param player 连麦播放引擎对象
+ * @param width     视频宽。
+ * @param height    视频高。
+ */
+
+/****
+ * @brief video resolution change notification
+ *
+ * @param player Live interaction player engine object
+ * @param width     video width
+ * @param height    video height
+ */
+- (void)onVideoResolutionChanged:(AlivcLivePlayer *)player width:(int)width height:(int)height;
 
 @end
 
