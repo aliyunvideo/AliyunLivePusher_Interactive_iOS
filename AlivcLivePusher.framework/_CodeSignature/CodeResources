@@ -4,30 +4,6 @@
 <dict>
 	<key>files</key>
 	<dict>
-		<key>Headers/AliRTCSdk.h</key>
-		<data>
-		iM2l4S7wJ/oJzwQyXlU/cGl9HHM=
-		</data>
-		<key>Headers/AliRenderView.h</key>
-		<data>
-		bpFd0octo3NOo9ETqlOoFNg5q7Q=
-		</data>
-		<key>Headers/AliRtcEngine+Plugin.h</key>
-		<data>
-		VRpLCo/BZSN46VONf/08q+0VMhE=
-		</data>
-		<key>Headers/AliRtcEngine.h</key>
-		<data>
-		hMqhhxARPk4F9B8fWwMTW2Px6k4=
-		</data>
-		<key>Headers/AliVCSDKInfo.h</key>
-		<data>
-		lQFXzwivPu33VJYAAIoJkEqCv6Q=
-		</data>
-		<key>Headers/AlivcBase.h</key>
-		<data>
-		ARIhHFrFOrhL5b65VyzS8kB4plA=
-		</data>
 		<key>Headers/AlivcLiveBase.h</key>
 		<data>
 		ehvUgZheJgHlyO6y2pRbp13iMPs=
@@ -60,29 +36,13 @@
 		<data>
 		o/Rs6oolUqSUNGwlFT3CqcM/wIs=
 		</data>
-		<key>Headers/engine_define.h</key>
+		<key>Headers/AlivcLivePusherHeader.h</key>
 		<data>
-		3pbL5kEzjt7MxilV49sQQd22FRs=
-		</data>
-		<key>Headers/engine_device_manager.h</key>
-		<data>
-		LXj9J0hFG7+Qbl8GUkLrTOaTRTI=
-		</data>
-		<key>Headers/engine_interface.h</key>
-		<data>
-		Zu+sKhf3LP6rjfwiDDVLNdYCsTc=
-		</data>
-		<key>Headers/engine_media_engine.h</key>
-		<data>
-		+ffYnfdwrBLK9gb6HiAoC6Kex2I=
-		</data>
-		<key>Headers/engine_utils.h</key>
-		<data>
-		90zcn9YnlGQIoyo4XWFk+6hPcJA=
+		flxMPA0Ag0sN3K5Sbse/KDdocCc=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		GnXq7gHfAllzUyDzV2jsz4MK/0Y=
+		4ssSdanUZwZ7N8zayYT+sdWPQxg=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -91,72 +51,6 @@
 	</dict>
 	<key>files2</key>
 	<dict>
-		<key>Headers/AliRTCSdk.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			iM2l4S7wJ/oJzwQyXlU/cGl9HHM=
-			</data>
-			<key>hash2</key>
-			<data>
-			mkHFPPy9KhTfhIaF9sCpG3Far9KScKTMP2T+BIroyZ8=
-			</data>
-		</dict>
-		<key>Headers/AliRenderView.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			bpFd0octo3NOo9ETqlOoFNg5q7Q=
-			</data>
-			<key>hash2</key>
-			<data>
-			3XcLvRba+oiwC7O14zaZjUq/xhd/IMYbvJ7ODnlbA7s=
-			</data>
-		</dict>
-		<key>Headers/AliRtcEngine+Plugin.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			VRpLCo/BZSN46VONf/08q+0VMhE=
-			</data>
-			<key>hash2</key>
-			<data>
-			v+GaREThr2ACBb7OV+qzo0MM0MJI0UPIex+pJqG92pk=
-			</data>
-		</dict>
-		<key>Headers/AliRtcEngine.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			hMqhhxARPk4F9B8fWwMTW2Px6k4=
-			</data>
-			<key>hash2</key>
-			<data>
-			7QcvDNEF5AZmcWJgWJWkck4f8wdRDde+XWLs/joIGJY=
-			</data>
-		</dict>
-		<key>Headers/AliVCSDKInfo.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			lQFXzwivPu33VJYAAIoJkEqCv6Q=
-			</data>
-			<key>hash2</key>
-			<data>
-			ZqJQvq0Bx8+MPkH+ZZ7m6dv9GME1GyFGphlZcRFxy2Q=
-			</data>
-		</dict>
-		<key>Headers/AlivcBase.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			ARIhHFrFOrhL5b65VyzS8kB4plA=
-			</data>
-			<key>hash2</key>
-			<data>
-			fpHfwgroaq31K4/YG+SdA0HA+IbY6jlBGRQ29p6aawA=
-			</data>
-		</dict>
 		<key>Headers/AlivcLiveBase.h</key>
 		<dict>
 			<key>hash</key>
@@ -245,59 +139,15 @@
 			NmYTjI5vpLDa8e8b7bLxAu8QVRy5nkdKLSldBEwR/SY=
 			</data>
 		</dict>
-		<key>Headers/engine_define.h</key>
+		<key>Headers/AlivcLivePusherHeader.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			3pbL5kEzjt7MxilV49sQQd22FRs=
+			flxMPA0Ag0sN3K5Sbse/KDdocCc=
 			</data>
 			<key>hash2</key>
 			<data>
-			OYaD1DY+h306IinBdWlNsDh9VgqXW9IooNmestqn7t8=
-			</data>
-		</dict>
-		<key>Headers/engine_device_manager.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			LXj9J0hFG7+Qbl8GUkLrTOaTRTI=
-			</data>
-			<key>hash2</key>
-			<data>
-			SNrftBme4iNeTd55T9cQrfSQBxCflTwArKnSGHH15SY=
-			</data>
-		</dict>
-		<key>Headers/engine_interface.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			Zu+sKhf3LP6rjfwiDDVLNdYCsTc=
-			</data>
-			<key>hash2</key>
-			<data>
-			TojNjN/wX/o/bicfjEKlh4CCKHwlD5c1HkqBKxWy938=
-			</data>
-		</dict>
-		<key>Headers/engine_media_engine.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			+ffYnfdwrBLK9gb6HiAoC6Kex2I=
-			</data>
-			<key>hash2</key>
-			<data>
-			bM/L1mcnT5yJDLhqcXhDJg+KaYjVSOUlqvijRVEJx0s=
-			</data>
-		</dict>
-		<key>Headers/engine_utils.h</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			90zcn9YnlGQIoyo4XWFk+6hPcJA=
-			</data>
-			<key>hash2</key>
-			<data>
-			JoTyhRH3l56kDpSNf/lih+oJyC3PWa7Pz9O8QYS3mPQ=
+			Yx2agvos4Zcds/hOtQtodXEIxeDGyZntccvEa8+HvIk=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

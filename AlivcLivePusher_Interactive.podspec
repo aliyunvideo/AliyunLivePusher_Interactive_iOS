@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
 
 
   s.subspec 'AlivcLivePusher' do |pushersdk|
-  pushersdk.vendored_frameworks = 'AlivcLivePusher.framework','AlivcLibReplayKitExt.framework','PluginOpus.framework','alivcffmpeg.framework'
+  pushersdk.vendored_frameworks = 'AlivcLivePusher.framework','AlivcLibReplayKitExt.framework','AliRTCSdk.framework','PluginOpus.framework','alivcffmpeg_lite.framework'
   pushersdk.frameworks = "CoreVideo","OpenGLES","AVFoundation","CoreMedia","VideoToolbox","AudioToolbox"
 # pushersdk.frameworks = 'MediaPlayer','CoreGraphics'
   end
