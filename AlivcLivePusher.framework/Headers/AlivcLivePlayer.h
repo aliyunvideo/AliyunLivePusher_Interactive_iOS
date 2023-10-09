@@ -255,17 +255,19 @@
 /**
  * @brief 网络质量变化时发出的消息
  * @param player 连麦播放引擎对象
- * @param quality  网络质量
+ * @param upQuality  上行网络质量
+ * @param downQuality 下行网络质量
  * @note 当对端网络质量发生变化时触发
  */
 
 /****
  * @brief The message that is sent when the network quality changes.
  * @param player Live interaction player engine object
- * @param quality  network quality
+ * @param upQuality  up network quality
+ * @param downQuality down network quality
  * @note Triggered when peer network quality changes.
  */
-- (void)onNetworkQualityChanged:(AlivcLivePlayer*)player quality: (AlivcLiveNetworkQuality)quality;
+- (void)onNetworkQualityChanged:(AlivcLivePlayer*)player upNetworkQuality:(AlivcLiveNetworkQuality)upQuality downNetworkQuality:(AlivcLiveNetworkQuality)downQuality;
 
 /**
  * @brief 播放统计数据回调
