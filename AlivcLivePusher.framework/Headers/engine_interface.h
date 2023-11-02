@@ -354,9 +354,9 @@ namespace AliRTCSdk
      */
     typedef struct AliEngineVideoRecordCanvasConfig {
         /** 录制视频宽 */
-        int canvasWidth;
+        int canvasWidth = 0;
         /** 录制视频高 */
-        int canvasHeight;
+        int canvasHeight = 0;
     }AliEngineVideoRecordCanvasConfig;
 
     /**
@@ -370,6 +370,16 @@ namespace AliRTCSdk
         /** 蓝色分量 */
         unsigned char b;
     }AliEngineRecordVideoBgColor;
+
+/**
+ * @brief 录制视频编码模式
+ */
+typedef enum {
+    /* 重新编码模式 */
+    AliEngineRecordVideoRawEncodeMode = 0,
+    /* 重用推流编码器的流 */
+    AliEngineRecordVideoReusingEncoderMode,
+} AliEngineRecordVideoEncodeMode;
 
     /**
      * @brief 录制视频坐标值
@@ -443,6 +453,12 @@ namespace AliRTCSdk
         AliEngineRecordVideoRegionArray shapes;
         /** 录制视频背景色 */
         AliEngineRecordVideoBgColor backColor = {0x00, 0x00, 0x00};
+        /** 编码模式 */
+        AliEngineRecordVideoEncodeMode encodeMode = AliEngineRecordVideoRawEncodeMode ;
+        /** 文件最大大小 字节单位 */
+        int64_t maxSize {-1} ;
+        /** 文件录制最大时长，秒单位 */
+        int64_t maxDuration {-1};
     }AliEngineRecordVideoLayout;
 
     /**
@@ -1516,15 +1532,17 @@ namespace AliRTCSdk
      */
     typedef struct AliEngineRecordVideoConfig {
         /** 帧率 */
-        int fps;
+        int fps = 20;
         /** 码率 */
-        int bitrate;
+        int bitrate = 500;
         /** 视频录制质量 */
-        AliEngineVideoQuality quality;
+        AliEngineVideoQuality quality = AliEngineVideoQualityDefault;
         /** 录制视频数据源 */
-        AliEngineVideoRecordSource sourceType;
+        AliEngineVideoRecordSource sourceType = AliEngineVideoRecordSourceCamera;
         /** 视频录制分辨率设置 */
         AliEngineVideoRecordCanvasConfig canvas;
+        /** 视频编码模式 */
+        AliEngineRecordVideoEncodeMode encodeMode =AliEngineRecordVideoReusingEncoderMode ;
     } AliEngineRecordVideoConfig;
 
     /**

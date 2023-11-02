@@ -626,8 +626,9 @@ typedef NS_ENUM(NSInteger, AliRtcAudioAccompanyErrorCode) {
 typedef NS_ENUM(NSUInteger, AliRtcRecordType) {
     /** 录制单个音频文件 */
     AliRtcRecordTypeAudio = 0,
+    /** 录制单个音视频文件 */
+    AliRtcRecordTypeVideo,
 };
-
 /**
  * @brief 录制格式
  */
@@ -636,6 +637,8 @@ typedef NS_ENUM(NSUInteger, AliRtcRecordFormat) {
     AliRtcRecordFormatAAC = 0,
     /** 录制WAV格式文件 */
     AliRtcRecordFormatWAV,
+    /** 录制MP4文件*/
+    AliRtcRecordFormatMP4,
 };
 
 /**
@@ -658,6 +661,20 @@ typedef NS_ENUM(NSUInteger, AliRtcVideoQuality) {
     AliRtcVideoQualityDefault = 0,
 };
 
+typedef NS_ENUM(NSInteger, AliRtcRecordMediaEventCode) {
+    /** 超过设置的时长 */
+    AliRtcRecordTimeOverLimit = -4 ,
+    /** 超过设置的文件大小 */
+    AliRtcRecordSizeOverLimit = -3 ,
+    /* 超过2Gbytes进行文件分块 */
+    AliRtcRecordOutOfSize = -2 ,
+    /** 写文件失败 */
+    AliRtcRecordWriteFailed = -1,
+    /** 开始录制 */
+    AliRtcRecordStart = 0,
+    /** 停止录制 */
+    AliRtcRecordStop = 1,
+};
 /**
  * @brief 录制音频采样率
 */
@@ -808,12 +825,135 @@ typedef struct  {
 }AliRtcRecordAudioConfig;
 
 /**
+ * @brief 录制视频分辨率
+ * @note 画布大小
+ */
+typedef struct {
+    /** 录制视频宽 */
+    int canvasWidth;
+    /** 录制视频高 */
+    int canvasHeight;
+}AliRtcRecordVideoCanvasConfig;
+
+/**
  * @brief 录制视频设置
  */
 typedef struct  {
-    /*! 视频质量 */
+    /** 视频质量 */
     AliRtcVideoQuality quality;
+    /** 录制文件类型 */
+    AliRtcRecordType sourceType;
+    /** 录制文件尺寸 */
+    AliRtcRecordVideoCanvasConfig canvas;
+    /** 录制帧率 */
+    int fps;
+    /** 录制码率 */
+    int bitrate;
 }AliRtcRecordVideoConfig;
+
+/**
+ * @brief 录制视频背景色
+ */
+typedef struct  {
+    /** 红色分量 */
+    uint8_t r;
+    /** 绿色分量 */
+    uint8_t g;
+    /** 蓝色分量 */
+    uint8_t b;
+}AliRtcRecordVideoBgColor;
+
+typedef struct {
+    uint32_t numerator;
+    uint32_t denominator;
+}AliRtcRecordVideoRational;
+
+/**
+ * @brief 录制视频布局
+ */
+typedef NS_ENUM(NSUInteger, AliRtcRecordVideoLayoutMode) {
+    /** 网格布局 */
+    AliRtcRecordVideoLayoutMode_GRID = 0,
+    /** 演讲者布局 */
+    AliRtcRecordVideoLayoutMode_SPEAKER = 1,
+    /** 只有一个画面布局 */
+    AliRtcRecordVideoLayoutMode_UNIQUE = 2,
+    /** 自定义布局 */
+    AliRtcRecordVideoLayoutMode_CUSTOM = 3,
+};
+
+/**
+ * @brief 录制视频编码模式
+ */
+typedef NS_ENUM(NSUInteger, AliRtcRecordVideoEncodeMode) {
+    /* 重新编码模式 */
+    AliRtcRecordRawEncodeMode = 0,
+    /* 重用推流编码器的流 */
+    AliRtcRecordReusingEncoderMode,
+};
+
+/**
+ * @brief 录制视频坐标
+*/
+typedef struct  {
+    AliRtcRecordVideoRational left;
+    AliRtcRecordVideoRational top;
+    AliRtcRecordVideoRational width;
+    AliRtcRecordVideoRational height;
+}AliRtcRecordVideoRectangle;
+
+
+ALI_RTC_API @interface AliRtcRecordVideoRegion : NSObject
+@property (nonatomic, retain) NSString * _Nonnull userId;
+@property (nonatomic, assign) AliRtcVideoSource sourceType;
+@property (nonatomic, assign) AliRtcRecordVideoRectangle area;
+
+@end
+
+/**
+ * @brief 录制视频布局
+*/
+ALI_RTC_API @interface AliRtcRecordVideoLayout : NSObject
+/** 视频布局模式 */
+@property (nonatomic, assign) AliRtcRecordVideoLayoutMode mode;
+/** 录制视频背景色 */
+@property (nonatomic, assign) AliRtcRecordVideoBgColor backColor;
+/** 录制视频用户布局数组 */
+@property (nonatomic, retain) NSMutableArray<AliRtcRecordVideoRegion *> * _Nullable shapes;
+/** 录制视频编码类型 */
+@property (nonatomic, assign) AliRtcRecordVideoEncodeMode encodeMode;
+/** 录制视频最大文件长度 字节单位 */
+@property (nonatomic, assign) int64_t maxSize;
+/** 录制视频最大时长 秒单位 */
+@property (nonatomic, assign) int64_t maxDuration;
+@end
+
+/**
+ * @brief 录制视频模板
+*/
+ALI_RTC_API @interface AliRtcRecordTemplate : NSObject
+/** 录制类型 */
+@property (nonatomic, assign) AliRtcRecordType recordType;
+/** 录制格式 */
+@property (nonatomic, assign) AliRtcRecordFormat recordFormat;
+/** 音频采样率类型 */
+@property (nonatomic, assign) AliRtcAudioSampleRate sampleRate;
+/** 音频录制质量 */
+@property (nonatomic, assign) AliRtcAudioQuality audioQuality;
+/** 外部pcm采集 */
+@property (nonatomic, assign) bool enableRecordExternalCapturePCM;
+/** 外部pcm渲染 */
+@property (nonatomic, assign) bool enableRecordExternalRenderPCM;
+/** 录制视频分辨率 */
+@property (nonatomic, assign) AliRtcRecordVideoCanvasConfig canvas;
+/** 帧率 */
+@property (nonatomic, assign) int fps;
+/** 码率 */
+@property (nonatomic, assign) int bitrate;
+/** 分段录制 */
+@property (nonatomic, assign) bool isFragment;
+
+@end
 
 /**
  * @brief 美颜参数
@@ -1163,6 +1303,7 @@ typedef NS_ENUM(NSInteger, AliRtcUserOfflineReason) {
     /** 用户身份从主播切换为观众时触发 */
     AliRtcUserOfflineBecomeAudience = 2,
 };
+
 
 /**
  * @brief 实时数据
@@ -2785,7 +2926,7 @@ ALI_RTC_API @protocol AliRtcEngineDelegate <NSObject>
  * @param filePath 录制文件路径
  * @note 该接口用于文件录制时的事件回调
  */
-- (void)onMediaRecordEvent:(int)event filePath:(NSString *_Nullable)filePath;
+- (void)onMediaRecordEvent:(AliRtcRecordMediaEventCode)event filePath:(NSString *_Nullable)filePath;
 
 /**
  * @brief 实时数据回调(2s触发一次)
@@ -5164,6 +5305,41 @@ NS_ASSUME_NONNULL_END
 - (int)setLiveStreamingViewConfig:(AliVideoCanvas *_Nullable)canvas;
 
 /** @} */
+
+#pragma mark - "本地视频录制"
+/**
+ * @brief 更新录制内容信息
+ * @details SDK提供了更新录制内容信息的功能,用于实时更新录制模板内容设置
+ * @param layout 录制视频内容及布局, 详细定义见 {@link AliRtcRecordVideoLayout}
+ * @return
+ * - YES: 成功
+ * - NO: 失败
+ * @note updateRecordLayout更新录制内容信息应该在录制过程中调用
+ */
+- (BOOL)updateRecordLayout:(AliRtcRecordVideoLayout*_Nonnull)layout;
+
+/**
+ * @brief 添加录制模板
+ * @details SDK提供了添加录制模板的功能,用于添加录制模板
+ * @param recordTemplate 录制模板, 详细定义见 {@link AliRtcRecordTemplate}
+ * @return
+ * - YES: 成功
+ * - NO: 失败
+ * @note addRecordTemplate添加录制模板必须在StartRecord之前调用
+ */
+- (BOOL)addRecordTemplate:(AliRtcRecordTemplate*_Nonnull)recordTemplate;
+
+/**
+ * @brief 开始录制
+ * @details SDK提供了屏录录制的功能，可以录制本地或远端的音频流、视频流、相机流，窗口布局设置参考 {@link AliEngineRecordVideoLayout}
+ * @param filePath 文件路径
+ * @param recordLayout 视频窗口布局设置, 详细定义见 {@link AliRtcRecordVideoLayout}
+ * @return
+ * - YES: 成功
+ * - NO: 失败
+ * @note startRecord之前调用必须先调用addRecordTemplate添加录制模板
+ */
+- (BOOL)startRecord:(NSString*_Nonnull)filePath recordLayout:(AliRtcRecordVideoLayout*_Nonnull)recordLayout;
 
 #pragma mark - "美颜控制"
 /**

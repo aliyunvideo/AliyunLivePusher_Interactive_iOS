@@ -180,7 +180,16 @@
 /****
  * @brief snapshot the video screen during playback
  */
-- (int)snapshot;
+- (int)snapshot:(AlivcLivePlayVideoStreamType)videoStreamType;
+
+/**
+ * @brief  获取当前播放成员的UserId
+ */
+
+/****
+ * @brief Get the UserId of the currently playing member
+ */
+@property (nonatomic, copy, readonly) NSString *userId;
 
 @end
 
@@ -324,8 +333,8 @@
 
 /****
  * @brief Snapshot callbacks
- * @param pusher player Live interaction player engine object
- * @param image
+ * @param player player Live interaction player engine object
+ * @param image snap image
  */
 - (void)onSnapshot:(AlivcLivePlayer *)player image:(UIImage *)image;
 
@@ -345,6 +354,44 @@
  * @param height    video height
  */
 - (void)onVideoResolutionChanged:(AlivcLivePlayer *)player width:(int)width height:(int)height;
+
+/**
+ * @brief 静音/取消静音回调
+ *
+ * @param player 连麦播放引擎对象
+ * @param isMute 是否静音
+ * - YES: 静音
+ * - NO: 取消静音
+ */
+
+/****
+ * @brief  mute/unmute callback
+ *
+ * @param player Live interaction player engine object
+ * @param isMute
+ * - YES: mute
+ * - NO: unmute
+ */
+- (void)onAudioMuted:(AlivcLivePlayer *)player muted:(BOOL)isMute;
+
+/**
+ * @brief 对端用户打开/关闭视频通知
+ *
+ * @param player 连麦播放引擎对象
+ * @param isMute
+ * - YES: 关闭视频
+ * - NO: 打开视频
+ */
+
+/****
+ * @brief Turn video notifications on/off
+ *
+ * @param player Live interaction player engine object
+ * @param isMute
+ * - YES: Close video
+ * - NO: Open video
+ */
+- (void)onVideoMuted:(AlivcLivePlayer *)player muted:(BOOL)isMute;
 
 @end
 

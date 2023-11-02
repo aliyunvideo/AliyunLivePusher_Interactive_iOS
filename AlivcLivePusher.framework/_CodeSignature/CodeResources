@@ -18,7 +18,7 @@
 		</data>
 		<key>Headers/AliRtcEngine.h</key>
 		<data>
-		L0HtcXsQ3zy0wIkYK1TBmPPIUoY=
+		RHzCuA9eS6gsIAn3IkBVyypxhTo=
 		</data>
 		<key>Headers/AliVCSDKInfo.h</key>
 		<data>
@@ -34,19 +34,19 @@
 		</data>
 		<key>Headers/AlivcLivePlayer.h</key>
 		<data>
-		Gzq9H1z3uxCL4AbwpUn+bsyUQrk=
+		URaLvlJ22u6jr8vFgJLtUVdocgc=
 		</data>
 		<key>Headers/AlivcLivePushConfig.h</key>
 		<data>
-		x7c9D3zlQz4urUhYTCUMChwHEJM=
+		F+TBLUL9N+FUoItUMe/uATixSnY=
 		</data>
 		<key>Headers/AlivcLivePushConstants.h</key>
 		<data>
-		5kuDJWLbQuXtHJqK+dZI8wTNeiw=
+		bGIgVgVClJ2ZR3J9VaK8st6hO+k=
 		</data>
 		<key>Headers/AlivcLivePushDef.h</key>
 		<data>
-		X89hXcXWXO0G12ZQ98AthNk+WRY=
+		miGNtnJPUhbMZWepAah+RXhG1Go=
 		</data>
 		<key>Headers/AlivcLivePushError.h</key>
 		<data>
@@ -58,7 +58,11 @@
 		</data>
 		<key>Headers/AlivcLivePusher.h</key>
 		<data>
-		ZNEpDdUxGDUbso4EOyKnyfZu4w0=
+		mLcaBigR+mm7LRlnI89UFXq6Rec=
+		</data>
+		<key>Headers/engine_c_interface.h</key>
+		<data>
+		y1HAQeTCnkN4vc2p0xyyC1dJ9gg=
 		</data>
 		<key>Headers/engine_define.h</key>
 		<data>
@@ -70,11 +74,11 @@
 		</data>
 		<key>Headers/engine_interface.h</key>
 		<data>
-		n90T6+dqFV6HtkGRnUD+gG9jzy8=
+		2Df9FIxN3n79wB7NUbxcGVoRnTU=
 		</data>
 		<key>Headers/engine_media_engine.h</key>
 		<data>
-		D7gfXBXxDxEF9ApD3/dn39VwWvs=
+		11184/qyTJHuW5NpNwosbEHyZIw=
 		</data>
 		<key>Headers/engine_utils.h</key>
 		<data>
@@ -82,7 +86,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		HnekDgLx/FowFV2a5qZt8eEBf8c=
+		5tAtqZ44spBQ59tKsMs2M4d5efA=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -128,11 +132,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			L0HtcXsQ3zy0wIkYK1TBmPPIUoY=
+			RHzCuA9eS6gsIAn3IkBVyypxhTo=
 			</data>
 			<key>hash2</key>
 			<data>
-			G1lCNMQ2OmqiMQAbxisbvluYiSaOAbJyVi6CPEKJ5iQ=
+			0WueA0V5udD/nNdrwjnj28UMiPmYdflieuXND/mJ4D4=
 			</data>
 		</dict>
 		<key>Headers/AliVCSDKInfo.h</key>
@@ -172,44 +176,44 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Gzq9H1z3uxCL4AbwpUn+bsyUQrk=
+			URaLvlJ22u6jr8vFgJLtUVdocgc=
 			</data>
 			<key>hash2</key>
 			<data>
-			OMgRatUqMFN2LUN9svZgyOkUJf2LeteGX/k2/sRQZmg=
+			FLGNSXdzYKpqtivDvLRnOjyqBgSbuOG3rY6svNunXcE=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePushConfig.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			x7c9D3zlQz4urUhYTCUMChwHEJM=
+			F+TBLUL9N+FUoItUMe/uATixSnY=
 			</data>
 			<key>hash2</key>
 			<data>
-			6SgMxJwB88rK4346wITb8UtyVO4FbBcNLNIAoIf30Lo=
+			IIjbXnnHwZUJ8rbJHmWUHdxulDY3Pr4mh4FEDG3u7GE=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePushConstants.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			5kuDJWLbQuXtHJqK+dZI8wTNeiw=
+			bGIgVgVClJ2ZR3J9VaK8st6hO+k=
 			</data>
 			<key>hash2</key>
 			<data>
-			P7Vk/xK1c78JULRin+kCIkdbEcvgdpgRtMwAhomxRIE=
+			NuAD8Rt6PSXw5dUxbBNQZNAsK7nHFLC3as67V+Yn8fM=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePushDef.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			X89hXcXWXO0G12ZQ98AthNk+WRY=
+			miGNtnJPUhbMZWepAah+RXhG1Go=
 			</data>
 			<key>hash2</key>
 			<data>
-			hCKXz0jdGPIifNqpGzrD35UoJNHxA0KBMqyo4sgrmnc=
+			sGtRA7K2LS+RCyE5wZ/i7JXXk6x9JnFTh9OR0OiwtZw=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePushError.h</key>
@@ -238,11 +242,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			ZNEpDdUxGDUbso4EOyKnyfZu4w0=
+			mLcaBigR+mm7LRlnI89UFXq6Rec=
 			</data>
 			<key>hash2</key>
 			<data>
-			fg7Px3gr+xBCAFbUX75fKLBkWlzm8jPDcaE6HvWFqp8=
+			FYtGPvTE+mt/h5Q1hmk0gQ/5ZawJMSHjskDxpDc0ppc=
+			</data>
+		</dict>
+		<key>Headers/engine_c_interface.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			y1HAQeTCnkN4vc2p0xyyC1dJ9gg=
+			</data>
+			<key>hash2</key>
+			<data>
+			/uaCkzFk5MleeSKhbUsLSIUvL55tCMN5rDe0Hxt+0l4=
 			</data>
 		</dict>
 		<key>Headers/engine_define.h</key>
@@ -271,22 +286,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			n90T6+dqFV6HtkGRnUD+gG9jzy8=
+			2Df9FIxN3n79wB7NUbxcGVoRnTU=
 			</data>
 			<key>hash2</key>
 			<data>
-			iMR9hQLeeZE68ErM0IfqlC6xV0z+CwpbRz0mo//hOIw=
+			QZbfYk+T7CB9JBAVDSPe2WW/ri7efpos2BUJiQzcnPI=
 			</data>
 		</dict>
 		<key>Headers/engine_media_engine.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			D7gfXBXxDxEF9ApD3/dn39VwWvs=
+			11184/qyTJHuW5NpNwosbEHyZIw=
 			</data>
 			<key>hash2</key>
 			<data>
-			H/II08a//52cvw3pcU1Pse04/7taE4LmvMEaPxb19EQ=
+			+gWum8uO3Q130dW5tYxx8RRJHzmA5zWBUJCPN79rY8U=
 			</data>
 		</dict>
 		<key>Headers/engine_utils.h</key>

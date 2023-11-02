@@ -475,13 +475,13 @@ namespace AliRTCSdk
          * @brief 文件当前总长度回调
          * @param durationMs 文件长度，单位ms
          */    
-        virtual void OnExternalFileDuration(int durationMs) = 0;  
+        virtual void OnExternalFileDuration(int64_t durationMs) = 0;
 
         /**
          * @brief 文件当前播放位置回调
          * @param currentMs 文件长度，单位ms
          */    
-        virtual void OnExternalFileCurrentPlayPosition(int currentMs) = 0;
+        virtual void OnExternalFileCurrentPlayPosition(int64_t currentMs) = 0;
         
         /**
          * @brief 文件当前分辨率基本信息
@@ -1122,7 +1122,7 @@ namespace AliRTCSdk
        * - 0: 成功
        * - 非0: 失败
        */
-      virtual int SeekExternalFilePosMs(int posMs) = 0;
+      virtual int SeekExternalFilePosMs(int64_t posMs) = 0;
 
 
     protected:
