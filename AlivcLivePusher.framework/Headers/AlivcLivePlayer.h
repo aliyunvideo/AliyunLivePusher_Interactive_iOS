@@ -71,6 +71,21 @@
 - (int)setPlayView:(UIView *)view  playCofig:(AlivcLivePlayConfig *)playConfig;
 
 /**
+ * @brief 更新远端用户的视频渲染控件
+ * @details 该接口用于设置互动场景下(连麦或者PK)场景下更新远端流的渲染控件
+ * 可能的使用场景是先调用setPlayView来设置一个播放view，后面需要更新该流的渲染控件
+ * @param view 视频显示view
+ */
+
+/****
+ * @brief Update video rendering controls for end users
+ * @details This method is used to set the playback control of remote streams in interaction scenarios such as interactive and battle.
+ * A possible usage scenario is to first call setPlayView to set a playback view, and later need to update the rendering control of the stream.
+ * @param view view
+ */
+- (void)updateRenderView:(UIView *)view;
+
+/**
  * @brief 开始播放音视频流（当前接口只在互动模式下生效）
  * @details 该接口用于互动场景下(连麦或者PK)场景下播放连麦观众或者PK主播的音视频流
  * 在连麦场景下，主播通过startPlayWithURL接口播放连麦观众实时音视频流，连麦观众通过startPlayWithURL播放主播实时音视频流
@@ -375,7 +390,7 @@
 - (void)onAudioMuted:(AlivcLivePlayer *)player muted:(BOOL)isMute;
 
 /**
- * @brief 对端用户打开/关闭视频通知
+ * @brief 对端用户打开/关闭视频通知(调用了AlivcLivePusher->muteLocalCamera)
  *
  * @param player 连麦播放引擎对象
  * @param isMute
@@ -392,6 +407,25 @@
  * - NO: Open video
  */
 - (void)onVideoMuted:(AlivcLivePlayer *)player muted:(BOOL)isMute;
+
+/**
+ * @brief 对端用户关闭相机流采集发送通知(调用了AlivcLivePusher->enableLocalCamera)
+ * @param player 连麦播放引擎对象
+ * @param isEnable
+ * - YES: 打开相机流采集
+ * - NO: 关闭相机流采集
+ * @note 该接口用于对端用户关闭相机流采集时的回调
+ */
+
+/****
+ * @brief The peer user closes camera capture and sends notification (AlivcLivePusher->enableLocalCamera is called)
+ * @param player Live interaction player engine object
+ * @param isEnable
+ * - YES: open camera
+ * - NO: close camera
+ * @note This interface is used to call back when the peer user closes camera capture .
+ */
+- (void)onVideoEnabled:(AlivcLivePlayer *)player enabled:(BOOL)isEnable;
 
 @end
 

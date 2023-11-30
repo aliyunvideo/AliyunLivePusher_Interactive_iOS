@@ -10,8 +10,8 @@
 #import "AliRtcEngine.h"
 #import "engine_define.h"
 
-/// @addtogroup AliRtcDef_ios iOS关键类型定义
-/// AliRTC功能的插件扩展
+/*  @addtogroup AliRtcDef_ios iOS关键类型定义 */
+/*  AliRTC功能的插件扩展 */
 /// @{
 
 /**
@@ -76,7 +76,7 @@ enum AliRtcPluginOperationType{
 
 #pragma mark - 接口主类
 /// @addtogroup AliRtc_ios AliRtcEngine
-/// AliRTC功能的插件扩展
+/*  AliRTC功能的插件扩展 */
 /// @{
 ALI_RTC_API @interface AliRtcEngine(Plugin)
 

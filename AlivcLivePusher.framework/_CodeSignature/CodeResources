@@ -14,7 +14,7 @@
 		</data>
 		<key>Headers/AliRtcEngine+Plugin.h</key>
 		<data>
-		VRpLCo/BZSN46VONf/08q+0VMhE=
+		BFuy6UJ0qXa5FdA1AqUzdvhF+o4=
 		</data>
 		<key>Headers/AliRtcEngine.h</key>
 		<data>
@@ -34,7 +34,7 @@
 		</data>
 		<key>Headers/AlivcLivePlayer.h</key>
 		<data>
-		URaLvlJ22u6jr8vFgJLtUVdocgc=
+		v5ahM4k7dVM6vycgDjIIjouNBM8=
 		</data>
 		<key>Headers/AlivcLivePushConfig.h</key>
 		<data>
@@ -58,7 +58,7 @@
 		</data>
 		<key>Headers/AlivcLivePusher.h</key>
 		<data>
-		mLcaBigR+mm7LRlnI89UFXq6Rec=
+		+BlIQ7Z04aHpPHOusCRqExztpic=
 		</data>
 		<key>Headers/engine_c_interface.h</key>
 		<data>
@@ -121,11 +121,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			VRpLCo/BZSN46VONf/08q+0VMhE=
+			BFuy6UJ0qXa5FdA1AqUzdvhF+o4=
 			</data>
 			<key>hash2</key>
 			<data>
-			v+GaREThr2ACBb7OV+qzo0MM0MJI0UPIex+pJqG92pk=
+			/9OonaeZC45xb+biv3/1S7XKJNW/ETafV5G5IXcXlwE=
 			</data>
 		</dict>
 		<key>Headers/AliRtcEngine.h</key>
@@ -176,11 +176,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			URaLvlJ22u6jr8vFgJLtUVdocgc=
+			v5ahM4k7dVM6vycgDjIIjouNBM8=
 			</data>
 			<key>hash2</key>
 			<data>
-			FLGNSXdzYKpqtivDvLRnOjyqBgSbuOG3rY6svNunXcE=
+			iJ8z+qQHC6DN8i83Xa1KV04v8jujZ/xLQlChb4tz/8c=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePushConfig.h</key>
@@ -242,11 +242,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			mLcaBigR+mm7LRlnI89UFXq6Rec=
+			+BlIQ7Z04aHpPHOusCRqExztpic=
 			</data>
 			<key>hash2</key>
 			<data>
-			FYtGPvTE+mt/h5Q1hmk0gQ/5ZawJMSHjskDxpDc0ppc=
+			0dlwiv/zr/MngbIkyTZg/rZX5tc2L/M6PSSXOdg6+u8=
 			</data>
 		</dict>
 		<key>Headers/engine_c_interface.h</key>
