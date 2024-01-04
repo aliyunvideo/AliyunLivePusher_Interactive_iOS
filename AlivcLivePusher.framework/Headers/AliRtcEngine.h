@@ -1397,6 +1397,10 @@ ALI_RTC_API @interface AliRtcRemoteVideoStats : NSObject
 @property (nonatomic, assign) unsigned int render_fps;
 /*! 卡顿次数 */
 @property (nonatomic, assign) unsigned int frozen_times;
+/*! 视频播放的累计卡顿时长，单位ms */
+@property (nonatomic, assign) unsigned int video_total_frozen_time;
+/*! 视频播放的累计卡顿率，单位% 计算方法 视频播放卡顿率=视频播放的累计卡顿时长/视频播放的总时长 */
+@property (nonatomic, assign) unsigned int video_total_frozen_rate;
 
 @end
 
@@ -1430,7 +1434,10 @@ ALI_RTC_API @interface AliRtcRemoteAudioStats : NSObject
 /*! 接收流的瞬时码率（Kbps） */
 @property (nonatomic, assign) unsigned int rcvd_bitrate;
 /*! 远端用户加入频道后音频卡顿的累计时长 (ms) */
-@property (nonatomic, assign) unsigned int total_frozen_times;
+@property (nonatomic, assign) unsigned int total_frozen_times; /*废弃*/
+@property (nonatomic, assign) unsigned int audio_total_frozen_time;
+/*! 远端用户加入频道后音频播放卡顿率 单位% 计算方法 音频播放卡顿率=音频播放的累计卡顿时长/音频播放的总时长 */
+@property (nonatomic, assign) unsigned int audio_total_frozen_rate;
 /*! 发送端到接收端的网络延时（ms) */
 @property (nonatomic, assign) unsigned int network_transport_delay;
 /*! 接受端到网络抖动缓存的网络延时（ms) */
@@ -2243,6 +2250,41 @@ ALI_RTC_API @interface AliRtcDataChannelMsg : NSObject
 @property (nonatomic, strong) NSData* _Nonnull data;
 @end
 
+
+/**
+ * @brief 网络探测的参数配置
+ */
+ALI_RTC_API @interface AliRtcNetworkQualityProbeConfig : NSObject
+/** 是否探测上行，默认值：NO */
+@property (nonatomic, assign) BOOL probeUplink;
+/** 是否探测下行，默认值：NO  暂不支持 */
+@property (nonatomic, assign) BOOL probeDownlink;
+/** 探测上行带宽峰值，单位kbps 默认值：10000 */
+@property (nonatomic, assign) int upLinkBandWidth;
+/** 探测下行带宽峰值，单位kbps 默认值：1000  暂不支持 */
+@property (nonatomic, assign) int DownLinkBandWidth;
+@end
+
+/**
+ * @brief 网络探测的结果
+ */
+ALI_RTC_API @interface AliRtcNetworkQualityProbeResult : NSObject
+/** 探测链路的rtt  单位ms*/
+@property (nonatomic, assign) int rtt;
+/** 上行的丢包率 最大值100 */
+@property (nonatomic, assign) int upLinkLossRate;
+/** 探测上行链路的jitter 单位ms  */
+@property (nonatomic, assign) int upLinkJitter;
+/** 探测上行链路的带宽，单位kbps */
+@property (nonatomic, assign) int upLinkBandWidth;
+/** 下行的丢包率 最大值100 暂不支持 */
+@property (nonatomic, assign) int downLinkLossRate;
+/** 探测下行链路的jitter 单位ms  暂不支持 */
+@property (nonatomic, assign) int downLinkJitter;
+/** 探测下行链路的带宽，单位kbps 暂不支持 */
+@property (nonatomic, assign) int downLinkBandWidth;
+@end
+
 /** @} AliRtcDef_ios */
 
 /**
@@ -2910,6 +2952,14 @@ ALI_RTC_API @protocol AliRtcEngineDelegate <NSObject>
  * @note 当调用 {@link AliRtcEngine::startLastmileDetect} 后会触发该回调
  */
 - (void)onLastmileDetectResultWithQuality:(AliRtcNetworkQuality)networkQuality;
+
+/**
+ * @brief 网络质量探测结果的回调
+ * @param code 探测结果，0 成功，-1失败，网络状况较差
+ * @param result 网络质量 {@link AliRtcNetworkQualityProbeResult}
+ * @note 当调用 {@link AliRtcEngine::startLastmileDetect} 后会触发该回调
+ */
+- (void)onLastmileDetectResultWithBandWidth:(int)code result:(AliRtcNetworkQualityProbeResult* _Nonnull)result;
 
 /**
  * @brief 视频分辨率变更
@@ -5240,12 +5290,14 @@ NS_ASSUME_NONNULL_END
 
 /**
  * @brief 开始网络质量探测
- * @details 网络质量探测需要在未入会  {@link joinChannel:name:onResultWithUserId:} 情况下调用，探测结果在 {@link onLastmileDetectResultWithQuality:} 中回调
+ * @details 网络质量探测需要在未入会  {@link joinChannel:name:onResultWithUserId:} 情况下调用，探测结果
+ * - 在3s左右，粗略的结果会在  {@link onLastmileDetectResultWithQuality:} 中回调
+ * - 在30s左右，更多的结果会在 {@link onLastmileDetectResultWithBandWidth:} 中回调
  * @return
  * - 0: 成功
  * - <0: 失败
  */
-- (int)startLastmileDetect;
+- (int)startLastmileDetect:(AliRtcNetworkQualityProbeConfig *_Nonnull)config;
 
 /**
  * @brief 停止网络质量探测

@@ -82,7 +82,27 @@ namespace AliRTCSdk
         /** 未知 */
         AliEngineNetworkQualityUnknow        = 6,
     } AliEngineNetworkQuality;
-    
+
+
+    /**
+     * @brief 网络质量探测结果
+     */
+    typedef struct AliEngineNetworkProbeResult {
+        /* 链路rtt 单位ms */
+        int rtt = 0;
+        /* 上行链路丢包率，最大值100 */
+        int uplinkLoss = 0;
+        /* 上行链路jitter， 单位ms */
+        int uplinkJitter = 0;
+        /* 上行链路带宽， 单位kbps */
+        int uplinkBandWidth = 0;
+        /* 下行链路丢包率，最大值100 */
+        int downlinkLoss = 0;
+        /* 下行链路jitter，单位ms */
+        int downlinkJitter = 0;
+        /* 下行链路带宽，单位kbps */
+        int downlinkBandWidth = 0;
+    } AliEngineNetworkProbeResult;
     /**
      * @brief 视频窗口镜像模式
      */
@@ -1607,6 +1627,8 @@ typedef enum {
         unsigned int decodeFps = 0;
         unsigned int renderFps = 0;
         unsigned int frozenTimes = 0;
+        unsigned int videoTotalFrozenTime = 0;
+        unsigned int videoTotalFrozenRate = 0;
         unsigned int rtpCount = 0;
         unsigned int rtpLoss = 0;
     } AliEngineRemoteVideoStats;
@@ -1635,6 +1657,8 @@ typedef enum {
         int audioLossRate = 0;
         int rcvdBitrate = 0;
         int totalFrozenTimes = 0;
+        int  audioTotalFrozenTime = 0; /* 音频播放的累计卡顿时长，单位ms */
+        int  audioTotalFrozenRate = 0; /* 音频播放卡顿率，单位% */
     } AliEngineRemoteAudioStats;
         
     /**
@@ -2867,10 +2891,17 @@ typedef enum {
         /**
          * @brief 网络质量探测回调
          * @param networkQuality 网络质量 {@link AliEngineNetworkQuality}
-         * @note 当调用 {@link AliEngine::StartLastmileDetect} 后会触发该回调
+         * @note 当调用 {@link AliEngine::StartLastmileDetect} 3s后会触发该回调
          */
         virtual void OnLastmileDetectResultWithQuality(AliEngineNetworkQuality networkQuality) {}
-        
+
+        /**
+         * @brief 网络质量探测结果的回调
+         * @param networkQuality 网络探测结果 {@link AliEngineNetworkProbeResult}
+         * @note 当调用 {@link AliEngine::StartLastmileDetect} 30s后会触发该回调
+         */
+        virtual void OnLastmileDetectResultWithBandWidth(int code, AliRTCSdk::AliEngineNetworkProbeResult networkQuality) {}
+
         /**
          * @brief 音频采集设备测试回调
          * @param level 音频采集设备音量值
@@ -4839,11 +4870,15 @@ typedef enum {
         /**
          * @brief 开始网络质量探测
          * @details 网络质量探测需要在未入会 {@link JoinChannel} 情况下调用，探测结果在 {@link AliEngineEventListener::OnLastmileDetectResultWithQuality} 中回调
+         * @param uplink 是否探测上行链路
+         * @param downlink 是否探测下行链路
+         * @param uplinkBandWidth 上行链路探测的最大带宽
+         * @param downlinkBandWidth 下行链路探测的最大带宽
          * @return
          * - 0: 成功
          * - <0: 失败
          */
-        virtual int StartLastmileDetect() = 0;
+        virtual int StartLastmileDetect(bool uplink, bool downlink, int uplinkBandWidth, int downlinkBandWidth) = 0;
 
         /**
          * @brief 停止网络质量探测

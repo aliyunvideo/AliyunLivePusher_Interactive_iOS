@@ -18,7 +18,7 @@
 		</data>
 		<key>Headers/AliRtcEngine.h</key>
 		<data>
-		RHzCuA9eS6gsIAn3IkBVyypxhTo=
+		lsLtgqJr48Wl53+RfMYjF8mcHgk=
 		</data>
 		<key>Headers/AliVCSDKInfo.h</key>
 		<data>
@@ -34,19 +34,19 @@
 		</data>
 		<key>Headers/AlivcLivePlayer.h</key>
 		<data>
-		v5ahM4k7dVM6vycgDjIIjouNBM8=
+		g5rcxlXXPqiIMcMFfWrqwPf35y8=
 		</data>
 		<key>Headers/AlivcLivePushConfig.h</key>
 		<data>
-		F+TBLUL9N+FUoItUMe/uATixSnY=
+		mTeZ5TkbNrbaZQFQ02O8Uw3C2nc=
 		</data>
 		<key>Headers/AlivcLivePushConstants.h</key>
 		<data>
-		bGIgVgVClJ2ZR3J9VaK8st6hO+k=
+		cFCph/9MNInsL2GFhJxnsgTjzU4=
 		</data>
 		<key>Headers/AlivcLivePushDef.h</key>
 		<data>
-		miGNtnJPUhbMZWepAah+RXhG1Go=
+		/UhlsLxIa2LlWO1xH5H8VdAGiko=
 		</data>
 		<key>Headers/AlivcLivePushError.h</key>
 		<data>
@@ -54,11 +54,11 @@
 		</data>
 		<key>Headers/AlivcLivePushStatsInfo.h</key>
 		<data>
-		2M8/Tv/UZbRbeL0WYJ6UWvVRjhY=
+		op2afk8Oht8T/mC2C95bOxMcw5E=
 		</data>
 		<key>Headers/AlivcLivePusher.h</key>
 		<data>
-		+BlIQ7Z04aHpPHOusCRqExztpic=
+		F+J+hR55ICOzYkT8GHdBv+XT/ww=
 		</data>
 		<key>Headers/engine_c_interface.h</key>
 		<data>
@@ -74,7 +74,7 @@
 		</data>
 		<key>Headers/engine_interface.h</key>
 		<data>
-		2Df9FIxN3n79wB7NUbxcGVoRnTU=
+		eyMBXqd0VqhAYp1RvEL0CDlfKec=
 		</data>
 		<key>Headers/engine_media_engine.h</key>
 		<data>
@@ -86,7 +86,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		Q7mqwCECM9g+Bh1NTfNy/C1rHfU=
+		6gPdaBre3YVFx19TnBUzgGuYIEA=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -132,11 +132,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			RHzCuA9eS6gsIAn3IkBVyypxhTo=
+			lsLtgqJr48Wl53+RfMYjF8mcHgk=
 			</data>
 			<key>hash2</key>
 			<data>
-			0WueA0V5udD/nNdrwjnj28UMiPmYdflieuXND/mJ4D4=
+			R3BWDGguGPMHouICRRraHqY6tKhOanRBiYwlHMrBbLI=
 			</data>
 		</dict>
 		<key>Headers/AliVCSDKInfo.h</key>
@@ -176,44 +176,44 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			v5ahM4k7dVM6vycgDjIIjouNBM8=
+			g5rcxlXXPqiIMcMFfWrqwPf35y8=
 			</data>
 			<key>hash2</key>
 			<data>
-			iJ8z+qQHC6DN8i83Xa1KV04v8jujZ/xLQlChb4tz/8c=
+			WPYVzxczd7YtDslqubHgc/Rjo1SitBAsiajEImYmAZA=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePushConfig.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			F+TBLUL9N+FUoItUMe/uATixSnY=
+			mTeZ5TkbNrbaZQFQ02O8Uw3C2nc=
 			</data>
 			<key>hash2</key>
 			<data>
-			IIjbXnnHwZUJ8rbJHmWUHdxulDY3Pr4mh4FEDG3u7GE=
+			8w2DNR879Uvxb5l1DRoA8AzDPK0qokElg/ZT2JsUA8g=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePushConstants.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			bGIgVgVClJ2ZR3J9VaK8st6hO+k=
+			cFCph/9MNInsL2GFhJxnsgTjzU4=
 			</data>
 			<key>hash2</key>
 			<data>
-			NuAD8Rt6PSXw5dUxbBNQZNAsK7nHFLC3as67V+Yn8fM=
+			ZLjc59sU5J2FsbcPrSfFFT6Z/EWdpSJvDS9gO7urFe8=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePushDef.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			miGNtnJPUhbMZWepAah+RXhG1Go=
+			/UhlsLxIa2LlWO1xH5H8VdAGiko=
 			</data>
 			<key>hash2</key>
 			<data>
-			sGtRA7K2LS+RCyE5wZ/i7JXXk6x9JnFTh9OR0OiwtZw=
+			m4fFOoXB33ZhLs+Jk1HVkmC9xWkH7RHBAPiUk0jiKgc=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePushError.h</key>
@@ -231,22 +231,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			2M8/Tv/UZbRbeL0WYJ6UWvVRjhY=
+			op2afk8Oht8T/mC2C95bOxMcw5E=
 			</data>
 			<key>hash2</key>
 			<data>
-			wsRXDO1Nv/JI2CLJ7l7ZE0nUyypSAJ6eY0ExlN28NAU=
+			VDTu1m/wZAqzfZAT4CwTy/VLJGF4GXhlA8CTfX00h7I=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePusher.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			+BlIQ7Z04aHpPHOusCRqExztpic=
+			F+J+hR55ICOzYkT8GHdBv+XT/ww=
 			</data>
 			<key>hash2</key>
 			<data>
-			0dlwiv/zr/MngbIkyTZg/rZX5tc2L/M6PSSXOdg6+u8=
+			LP+ifpRizBknSdvpLXlR9sZW3dm4kPkP9DfZyVcr1Nc=
 			</data>
 		</dict>
 		<key>Headers/engine_c_interface.h</key>
@@ -286,11 +286,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			2Df9FIxN3n79wB7NUbxcGVoRnTU=
+			eyMBXqd0VqhAYp1RvEL0CDlfKec=
 			</data>
 			<key>hash2</key>
 			<data>
-			QZbfYk+T7CB9JBAVDSPe2WW/ri7efpos2BUJiQzcnPI=
+			Ja7PHbYC+x6aei7DORawd73lgP9+L/gCyOc4kLp3U1k=
 			</data>
 		</dict>
 		<key>Headers/engine_media_engine.h</key>

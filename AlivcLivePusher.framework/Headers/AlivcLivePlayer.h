@@ -267,6 +267,39 @@
 - (void)onPlayStoped:(AlivcLivePlayer *)player;
 
 /**
+ * @brief 音频首包接收回调
+ * @param player 连麦播放引擎对象
+ */
+
+/****
+ * @brief The callback for first audio frame received.
+ * @param player Live interaction player engine object
+ */
+- (void)onFirstAudioFrameReceived:(AlivcLivePlayer*)player;
+
+/**
+ * @brief 已解码远端音频首帧回调
+ * @param player 连麦播放引擎对象
+ */
+
+/****
+ * @brief The callback for first audio frame received.
+ * @param player Live interaction player engine object
+ */
+- (void)onFirstAudioFrameDecoded:(AlivcLivePlayer*)player;
+
+/**
+ * @brief 视频首包接收回调
+ * @param player 连麦播放引擎对象
+ */
+
+/****
+ * @brief The callback for first video frame received.
+ * @param player Live interaction player engine object
+ */
+- (void)onFirstVideoFrameReceived:(AlivcLivePlayer*)player;
+
+/**
  * @brief 视频首帧渲染回调
  * @param player 连麦播放引擎对象
  */
@@ -426,6 +459,19 @@
  * @note This interface is used to call back when the peer user closes camera capture .
  */
 - (void)onVideoEnabled:(AlivcLivePlayer *)player enabled:(BOOL)isEnable;
+
+/**
+ * @brief DataChannel自定义消息回调
+ * @param player 连麦播放引擎对象
+ * @param data 数据
+ */
+
+/****
+ * @brief Data channel message callback
+ * @param player Live interaction player engine object
+ * @param data Data
+ */
+- (void)onReceiveDataChannelMessage:(AlivcLivePlayer *)player data:(NSData *)data;
 
 @end
 
