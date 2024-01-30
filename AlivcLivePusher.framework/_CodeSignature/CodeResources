@@ -34,7 +34,7 @@
 		</data>
 		<key>Headers/AlivcLivePlayer.h</key>
 		<data>
-		g5rcxlXXPqiIMcMFfWrqwPf35y8=
+		0fpv+4CjRWwztKXq3qi8ploqWs0=
 		</data>
 		<key>Headers/AlivcLivePushConfig.h</key>
 		<data>
@@ -42,7 +42,7 @@
 		</data>
 		<key>Headers/AlivcLivePushConstants.h</key>
 		<data>
-		cFCph/9MNInsL2GFhJxnsgTjzU4=
+		dRqcvrqCbSXBk18zo8i4TcXpTxQ=
 		</data>
 		<key>Headers/AlivcLivePushDef.h</key>
 		<data>
@@ -58,7 +58,7 @@
 		</data>
 		<key>Headers/AlivcLivePusher.h</key>
 		<data>
-		F+J+hR55ICOzYkT8GHdBv+XT/ww=
+		mN5fxM7IW7InR9pgJndV+qFphtA=
 		</data>
 		<key>Headers/engine_c_interface.h</key>
 		<data>
@@ -176,11 +176,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			g5rcxlXXPqiIMcMFfWrqwPf35y8=
+			0fpv+4CjRWwztKXq3qi8ploqWs0=
 			</data>
 			<key>hash2</key>
 			<data>
-			WPYVzxczd7YtDslqubHgc/Rjo1SitBAsiajEImYmAZA=
+			yS97VN+LaMJkhD5eRUi+t+V8GZMqBqDPxWshdstyyDc=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePushConfig.h</key>
@@ -198,11 +198,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			cFCph/9MNInsL2GFhJxnsgTjzU4=
+			dRqcvrqCbSXBk18zo8i4TcXpTxQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			ZLjc59sU5J2FsbcPrSfFFT6Z/EWdpSJvDS9gO7urFe8=
+			SaL4jZmY3TpwiwTGIWJ4doswUbTfsCxcz6cC3JxoYaU=
 			</data>
 		</dict>
 		<key>Headers/AlivcLivePushDef.h</key>
@@ -242,11 +242,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			F+J+hR55ICOzYkT8GHdBv+XT/ww=
+			mN5fxM7IW7InR9pgJndV+qFphtA=
 			</data>
 			<key>hash2</key>
 			<data>
-			LP+ifpRizBknSdvpLXlR9sZW3dm4kPkP9DfZyVcr1Nc=
+			oGqKu5HsSnlv8CIagrN0eHGsv/MT+BJYAIuwfDgZQiw=
 			</data>
 		</dict>
 		<key>Headers/engine_c_interface.h</key>

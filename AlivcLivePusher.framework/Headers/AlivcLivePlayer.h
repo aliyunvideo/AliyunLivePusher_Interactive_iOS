@@ -245,7 +245,7 @@
 - (void)onError:(AlivcLivePlayer *)player code:(AlivcLivePlayerError)code message:(NSString *)msg;
 
 /**
- * @brief 开始播放回调
+ * @brief 开始播放回调，表示播放音视频成功
  * @param player 连麦播放引擎对象
  */
 
@@ -265,6 +265,51 @@
  * @param player Live interaction player engine object
  */
 - (void)onPlayStoped:(AlivcLivePlayer *)player;
+
+/**
+ * @brief 音频流订阅情况变更回调
+ * @param player 连麦播放引擎对象
+ * @param oldState 之前的订阅状态，详见  AliLiveSubscribeState
+ * @param newState 当前的订阅状态，详见 AliLiveSubscribeState
+ */
+
+/****
+ * @brief Audio stream subscription change callback
+ * @param player Live interaction player engine object
+ * @param oldState Previous subscription status, see AliLiveSubscribeState for details
+ * @param newState Current subscription status, see AliLiveSubscribeState for details
+ */
+- (void)onAudioSubscribeStateChanged:(AlivcLivePlayer *)player oldState:(AliLiveSubscribeState)oldState newState:(AliLiveSubscribeState)newState;
+
+/**
+ * @brief 相机流订阅情况变更回调
+ * @param player 连麦播放引擎对象
+ * @param oldState 之前的订阅状态，详见  AliLiveSubscribeState
+ * @param newState 当前的订阅状态，详见 AliLiveSubscribeState
+ */
+
+/****
+ * @brief Camera stream subscription change callback
+ * @param player Live interaction player engine object
+ * @param oldState Previous subscription status, see AliLiveSubscribeState for details
+ * @param newState Current subscription status, see AliLiveSubscribeState for details
+ */
+- (void)onVideoSubscribeStateChanged:(AlivcLivePlayer *)player oldState:(AliLiveSubscribeState)oldState newState:(AliLiveSubscribeState)newState;
+
+/**
+ * @brief 屏幕分享流订阅情况变更回调
+ * @param player 连麦播放引擎对象
+ * @param oldState 之前的订阅状态，详见  AliLiveSubscribeState
+ * @param newState 当前的订阅状态，详见 AliLiveSubscribeState
+ */
+
+/****
+ * @brief Screen stream subscription change callback
+ * @param player Live interaction player engine object
+ * @param oldState Previous subscription status, see AliLiveSubscribeState for details
+ * @param newState Current subscription status, see AliLiveSubscribeState for details
+ */
+- (void)onScreenShareSubscribeStateChanged:(AlivcLivePlayer *)player oldState:(AliLiveSubscribeState)oldState newState:(AliLiveSubscribeState)newState;
 
 /**
  * @brief 音频首包接收回调
@@ -459,6 +504,19 @@
  * @note This interface is used to call back when the peer user closes camera capture .
  */
 - (void)onVideoEnabled:(AlivcLivePlayer *)player enabled:(BOOL)isEnable;
+
+/**
+ * @brief 远端用户离开
+ * @param player 连麦播放引擎对象
+ * @param reason 用户离线的原因，详见AliLiveUserOfflineReason
+ */
+
+/**
+ * @brief Remote user leaves
+ * @param player Live interaction player engine object
+ * @param reason The reason why the user is offline, see AliLiveUserOfflineReason for details
+ */
+- (void)onRemoteUserLeave:(AlivcLivePlayer *)player leaveReason:(AliLiveUserOfflineReason)reason;
 
 /**
  * @brief DataChannel自定义消息回调
