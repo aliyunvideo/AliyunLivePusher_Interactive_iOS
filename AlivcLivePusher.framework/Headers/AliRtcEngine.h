@@ -321,6 +321,26 @@ typedef NS_ENUM(NSInteger, AliRtcVideoFormat) {
     AliRtcVideoFormat_File,
 };
 
+/*
+ * @brief 编码器解码器类型 
+*/
+typedef NS_ENUM(NSInteger, AliRtcVideoCodecManufacturer) {
+    AliRtcVideoCodecManufactureropenH264 = 0,
+    AliRtcVideoCodecManufacturerX264 = 1,
+    AliRtcVideoCodecManufacturerX265 = 2,
+    AliRtcVideoCodecManufacturerS265 = 3,
+    AliRtcVideoCodecManufacturerFFMPEG = 4 ,
+    AliRtcVideoCodecManufacturerQsvIntel = 0x10,
+    AliRtcVideoCodecManufacturerNvidia = 0x11,
+    AliRtcVideoCodecManufacturerAMD = 0x12,
+    AliRtcVideoCodecManufacturerMicrosoft = 0x13,
+    AliRtcVideoCodecManufacturerVideoToolbox = 0x20,
+    AliRtcVideoCodecManufacturerMediaCodec = 0x30,
+
+    AliRtcVideoCodecManufacturerUnknown = 0xFFFF,
+};
+
+
 /**
  * @brief 视频编码器类型
  */
@@ -5793,6 +5813,14 @@ NS_ASSUME_NONNULL_END
  * - 获取解码器类型，会返回AliRtcVideoFormat_H265；
 */
 - (int)getVideoCodecType:(AliRtcVideoCodecKindType)codec_kind videoFormat:(AliRtcVideoFormat * _Nonnull)videoFormat ;
+
+/**
+* @brief 获取当前使用的编码器类型,如未开始推流，返回无效类型
+* @param track AliRtcVideoTrack
+* @return AliRtcVideoCodecManufacturer 编码器类型
+*/
+- (AliRtcVideoCodecManufacturer)getCurrentEncoderManufacturer:(AliRtcVideoTrack)track;
+
 
 /**
 * @brief 获取时间轴时间

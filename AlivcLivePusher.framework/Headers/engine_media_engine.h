@@ -332,7 +332,8 @@ namespace AliRTCSdk
         int encodeCostMs = 0;
 #if defined(WEBRTC_ANDROID)
         long shared_context = 0;
-        bool egl_change = false;  
+        bool egl_change = false;
+        void * egl_context = NULL ;
 #endif              
     } AliEngineVideoRawData;
 

@@ -531,6 +531,26 @@
  */
 - (void)onReceiveDataChannelMessage:(AlivcLivePlayer *)player data:(NSData *)data;
 
+
+/**
+ * @brief 远端视频数据回调
+ * @param player 连麦播放引擎对象
+ * @param videoSample 视频裸数据
+ * @return
+ * - YES: 需要写回SDK
+ * - NO: 不需要写回SDK
+*/
+
+/****
+ * @brief Remote video data callback
+ * @param player Live interaction player engine object
+ * @param videoSample video raw data
+ * @return
+ * - YES: Need to write back to SDK
+ * - NO: No need to write back to SDK
+*/
+- (BOOL)onRemoteVideoSample:(AlivcLivePlayer *)player videoSample:(AlivcLiveVideoDataSample *_Nonnull)videoSample;
+
 @end
 
 /** @} */

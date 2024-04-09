@@ -643,6 +643,8 @@ typedef enum {
         AliEngineErrorPublishScreenShareFailed = 0x01010453,
         /** 屏幕共享配置错误 */
         AliEngineErrorPublishScreenShareConfigError = 0x01010454,
+		/** 视频编码不支持H265错误*/
+		AliEngineErrorPublishDeviceNotSupportHevc = 0x01010455,
 
         /****************************************************
          * 订阅相关错误码
@@ -2330,6 +2332,7 @@ typedef enum {
     typedef struct AliEngineEncoderNotifyInfo {
         AliEngineVideoTrack videoTrack = AliEngineVideoTrack::AliEngineVideoTrackNo;
         AliEngineVideoCodecManufacturer encoderManufacturer = AliEngineVideoCodecManufacturer::AliEngineVideoCodecManufacturerUnknown;
+        AliEngineVideoFormat videoFormat = AliEngineVideoFormat::AliEngineVideoFormatH264;
     } AliEngineEncoderNotifyInfo;
 
 	/**
