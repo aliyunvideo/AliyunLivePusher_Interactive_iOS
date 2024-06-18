@@ -25,6 +25,8 @@ namespace AliRTCSdk
       AliEngineAudioTrackMic = 1,
       /** Dual流 */
       AliEngineAudioTrackDual = 2,
+      /** 麦克风 + 第二流 */
+      AliEngineAudioTrackBoth = 3,
       /** 占位符 */
       AliEngineAudioTrackEnd = 0xffffffff
     } AliEngineAudioTrack;

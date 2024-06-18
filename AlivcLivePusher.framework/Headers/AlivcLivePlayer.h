@@ -28,10 +28,19 @@
 
 /**
  * @brief 互动直播模式下拉流类，暂只支持互动模式下的拉流URL
+ * @attention 当前API只能用于拉取实时互动流（RTC流）；如果拉取普通直播CDN流（旁路直播流），请使用标准协议的播放器
+ * @see <a href="https://help.aliyun.com/zh/live/developer-reference/push-sdk/">推流SDK文档</a>
+ * @see <a href="https://help.aliyun.com/zh/live/user-guide/co-streaming/">直播连麦文档</a>
+ * @see <a href="https://help.aliyun.com/zh/live/developer-reference/integrate-a-push-sdk-license">推流SDK License文档</a>
  */
 
 /****
  * @brief The class for stream pulling in interactive mode. Only source URLs in interactive mode are supported
+ * @attention The current API can only be used to pull real-time interactive streams (RTC streams); If pulling a regular live CDN stream (bypass live stream), please use a standard protocol player
+ * @see <a href="https://help.aliyun.com/zh/live/developer-reference/push-sdk/">推流SDK文档</a>
+ * @see <a href="https://help.aliyun.com/zh/live/user-guide/co-streaming/">直播连麦文档</a>
+ * @see <a href="https://help.aliyun.com/zh/live/developer-reference/integrate-a-push-sdk-license">推流SDK License文档</a>
+
  */
 @interface AlivcLivePlayer : NSObject
 
@@ -85,11 +94,24 @@
  */
 - (void)updateRenderView:(UIView *)view;
 
+
+/**
+ * @brief 更新播放配置信息
+ * @param playConfig 播放配置信息 {@link AlivcLivePlayConfig}
+ */
+
+/****
+ * @brief Update play configuration
+ * @param playConfig play configuration {@link AlivcLivePlayConfig}
+ */
+- (void)updatePlayConfig:(AlivcLivePlayConfig *)playConfig;
 /**
  * @brief 开始播放音视频流（当前接口只在互动模式下生效）
  * @details 该接口用于互动场景下(连麦或者PK)场景下播放连麦观众或者PK主播的音视频流
  * 在连麦场景下，主播通过startPlayWithURL接口播放连麦观众实时音视频流，连麦观众通过startPlayWithURL播放主播实时音视频流
  * 在PK场景下，主播A和主播B PK,主播A和主播B分别调用startPlayWithURL来播放要PK的另一个主播的音视频流
+ * @note 停止播放，对应接口： AlivcLivePlayer::stopPlay
+ * @note 该接口对应回调： AliLivePlayerDelegate::onPlayStarted:
  * @param url 主播或连麦观众的拉流(播放)地址
  */
 
@@ -99,6 +121,8 @@
  * In co-streaming scenarios, the streamer plays the audio and video streams of the interactive by using the startPlayWithURL method,
  * and the co-streamer plays the audio and video streams of the streamer by using the startPlayWithURL method.
  * In battle scenarios, streamer A and streamer B who start a battle call startPlayWithURL to play the audio and video streams of the other streamer.
+ * @note stopPlay, corresponding to the interface: AlivcLivePlayer::stopPlay
+ * @note This interface corresponds to the callback: AliLivePlayerDelegate::onPlayStarted:
  * @param url The streaming URL of the streamer or co-streamer.
  */
 - (void)startPlayWithURL:(NSString *)url;
@@ -106,35 +130,37 @@
 /**
  * @brief 停止播放音视频流（当前接口只在互动模式下生效）
  * @details 该接口和startPlayWithURL接口相对应
+ * @note 该接口对应回调： AliLivePlayerDelegate::onPlayStopped:
  */
 
 /****
  * @brief Stop playing audio and video streams. (This method is supported only in interactive mode.)
  * @details This method corresponds to the startPlayWithURL method.
+ * @note This interface corresponds to the callback: AliLivePlayerDelegate::onPlayStopped:
  */
 - (void)stopPlay;
 
 /**
- * @brief 暂停播放音频流
+ * @brief 暂停播放音频流(静音)
  * * @return
  * - 0: 成功
  * - 非0: 失败
  */
 
 /****
- * @brief Pause playback of an audio stream.
+ * @brief Pause playback of an audio stream(audio mute).
  */
 - (int)pauseAudioPlaying;
 
 /**
- * @brief 恢复播放音频流
+ * @brief 恢复播放音频流(取消静音)
  * * @return
  * - 0: 成功
  * - 非0: 失败
  */
 
 /****
- * @brief Resume playback of an audio stream.
+ * @brief Resume playback of an audio stream(audio unmute).
  */
 - (int)resumeAudioPlaying;
 
@@ -224,6 +250,14 @@
  * @ingroup live
  *  Live interaction player engine callbacks
  *  @{
+ */
+
+/**
+ * @brief 直播连麦播放回调
+ */
+
+/****
+ * @brief Live interaction player engine callbacks
  */
 @protocol AliLivePlayerDelegate <NSObject>
 
@@ -509,12 +543,15 @@
  * @brief 远端用户离开
  * @param player 连麦播放引擎对象
  * @param reason 用户离线的原因，详见AliLiveUserOfflineReason
+ * @note 当前SDK内部在收到远端用户离开消息后，会自动调用AlivcLivePlayer->stopPlay来结束播放，但是在某些特殊场景，不希望SDK内部自动调用结束播放，可以
+ *  在AlivcLivePlayConfig中设置autoStoppedPlayWhenUserLeaved为false，SDK内部收到远端用户离开消息后不再自动调用结束播放，需要业务层自行调用stopPlay。
  */
 
 /**
  * @brief Remote user leaves
  * @param player Live interaction player engine object
  * @param reason The reason why the user is offline, see AliLiveUserOfflineReason for details
+ * @note After receiving the message that the remote user has left, the current SDK will automatically call AlivcLivePlayer->stopPlay to end playback. However, in some special scenarios, if you do not want the SDK to automatically call to end playback, you can set autoStoppedPlayWhenUserLeaved to false in AlivcLivePlayConfig, SDK After receiving the remote user leave message internally, it will no longer automatically call to end playback. The business layer needs to call stopPlay by itself.
  */
 - (void)onRemoteUserLeave:(AlivcLivePlayer *)player leaveReason:(AliLiveUserOfflineReason)reason;
 
@@ -531,26 +568,53 @@
  */
 - (void)onReceiveDataChannelMessage:(AlivcLivePlayer *)player data:(NSData *)data;
 
+ /**
+  * @brief 远端视频数据回调
+  * @param player 连麦播放引擎对象
+  * @param videoSample 视频裸数据
+  * @return
+  * - YES: 需要写回SDK
+  * - NO: 不需要写回SDK
+  * @note 默认不回调，需要通过AlivcLivePushConfig.enableRemoteVideoFrameObserver开启，开启后，可回调远端视频裸数据
+ */
 
-/**
- * @brief 远端视频数据回调
- * @param player 连麦播放引擎对象
- * @param videoSample 视频裸数据
- * @return
- * - YES: 需要写回SDK
- * - NO: 不需要写回SDK
-*/
+ /****
+  * @brief Remote video data callback
+  * @param player Live interaction player engine object
+  * @param videoSample video raw data
+  * @return
+  * - YES: Need to write back to SDK
+  * - NO: No need to write back to SDK
+  * @note There is no callback by default. It needs to be enabled through AlivcLivePushConfig.enableRemoteVideoFrameObserver. After it is enabled, the remote video raw data can be called back.
+ */
+ - (BOOL)onRemoteVideoSample:(AlivcLivePlayer *)player videoSample:(AlivcLiveVideoDataSample *_Nonnull)videoSample;
 
-/****
- * @brief Remote video data callback
- * @param player Live interaction player engine object
- * @param videoSample video raw data
- * @return
- * - YES: Need to write back to SDK
- * - NO: No need to write back to SDK
-*/
-- (BOOL)onRemoteVideoSample:(AlivcLivePlayer *)player videoSample:(AlivcLiveVideoDataSample *_Nonnull)videoSample;
+
+ /**
+  * @brief 远端拉流数据回调
+  * @details 默认关闭，需要通过enableAudioFrameObserver : YES audioSource: AliLiveAudioSourceRemoteUser 开启
+  *
+  *  - 该接口支持设置采样率、声道数
+  *  - 该接口支持读写模式
+  *
+  * @param pusher 推流引擎对象
+  * @param audioSample 音频数据sample, {@link AlivcLivePusherAudioDataSample}
+  * @note 请不要在此回调函数中做任何耗时操作，否则可能导致声音异常
+  */
+
+ /****
+  * @brief The remote original audio data  callback
+  * @details It is turned off by default and needs to be turned on by enableAudioFrameObserver: YES audioSource: AliLiveAudioSourceRemoteUser
+  *  - This interface supports setting the sampling rate and number of channels
+  *  - This interface supports read and write modes
+  * @param pusher The live pusher engine object
+  * @param audioSample audio sample data {@link AlivcLivePusherAudioDataSample}
+  * @note Please do not do any time-consuming operations in this callback function, otherwise it may cause abnormal sound
+  */
+ - (void)onRemoteAudioSampleCallback:(AlivcLivePlayer *)player audioSample:(AlivcLivePusherAudioDataSample*)audioSample;
 
 @end
 
 /** @} */
+
+/**** @} */

@@ -42,6 +42,8 @@ typedef NS_ENUM(NSUInteger, AliRtcAudioTrack) {
     AliRtcAudioTrackMic  = 1,
     /** 第二流 */
     AliRtcAudioTrackDual = 2,
+    /** 麦克风 + 第二流 */
+    AliRtcAudioTrackBoth = 3,
 };
 
 
@@ -319,6 +321,7 @@ typedef NS_ENUM(NSInteger, AliRtcVideoFormat) {
     AliRtcVideoFormat_H264,
     AliRtcVideoFormat_H265,
     AliRtcVideoFormat_File,
+    AliRtcVideoFormat_cvPixelBuffer,
 };
 
 /*
@@ -1491,8 +1494,6 @@ ALI_RTC_API @interface AliRtcAuthInfo : NSObject
 @property (nonatomic, retain) NSString * _Nonnull token;
 @property (nonatomic, retain) NSString * _Nullable session;
 @property (nonatomic, retain) NSString * _Nullable role;
-@property (nonatomic, retain) NSArray <NSString *> * _Nullable gslb;
-@property (nonatomic, retain) NSArray <NSString *> * _Nullable agent;
 @property (nonatomic, assign) long long timestamp;
 
 @end
@@ -3033,10 +3034,11 @@ ALI_RTC_API @protocol AliRtcEngineDelegate <NSObject>
 /**
  * @brief 收到媒体扩展信息回调
  * @param uid 发送用户ID
+ * @param payloadType 载荷类型
  * @param data 媒体扩展信息
  * @note 当一端通过 {@link AliRtcEngine::sendMediaExtensionMsg:repeatCount:} 发送信息后，其他端通过该回调接收数据
  */
-- (void)onMediaExtensionMsgReceived:(NSString *_Nonnull)uid message:(NSData *_Nonnull)data;
+- (void)onMediaExtensionMsgReceived:(NSString *_Nonnull)uid payloadType:(int)payloadType message:(NSData *_Nonnull)data;
 
 /**
  * @brief 下行消息通道(接收消息)
@@ -4054,6 +4056,26 @@ ALI_RTC_API @interface AliRtcEngine : NSObject <AliRtcEngineDelegate>
 - (int)subscribeRemoteAudioStream:(NSString *_Nonnull)uid sub:(BOOL)sub;
 
 /**
+ * @brief 停止/恢复订阅特定远端用户的音频流
+ * @param uid 用户ID，从App server分配的唯一标示符
+ * @param track 视频流类型
+ * - AliEngineAudioTrackNo: 无效参数，设置不会有任何效果
+ * - AliEngineAudioTrackMic: 麦克风流
+ * - AliEngineAudioTrackDual: 第二条音频流
+ * - AliEngineAudioTrackBoth: 麦克风流和第二条音频流
+ * @param sub 是否订阅远端用户的音频流
+ * - true:订阅指定用户的音频流
+ * - false:停止订阅指定用户的音频流
+ * @return
+ * - 0: 成功
+ * - 非0: 失败
+ * @note
+ * - 如果之前有调用过 AliEngine::SubscribeAllRemoteAudioStreams(false) 停止订阅所有远端音频，则此接口调用无效；
+ * - {@link AliEngine::SubscribeAllRemoteAudioStreams} 是全局控制，SubscribeRemoteAudioStream 是单独控制。
+ */
+- (int)subscribeRemoteAudioStream:(NSString *_Nonnull)uid track:(AliRtcAudioTrack)track sub:(BOOL)sub;
+
+/**
  * @brief 停止/恢复订阅远端用户的视频流
  * @param uid 用户ID，从App server分配的唯一标示符
  * @param track 视频流类型
@@ -4102,6 +4124,60 @@ ALI_RTC_API @interface AliRtcEngine : NSObject <AliRtcEngineDelegate>
 - (int)subscribeRemoteMediaStream:(NSString *_Nonnull)uid videoTrack:(AliRtcVideoTrack)videoTrack subVideo:(BOOL)subVideo subAudio:(BOOL)subAudio;
 
 /**
+ * @brief 停止/恢复订阅远端用户的音视频流
+ * @param uid 用户ID，从App server分配的唯一标示符
+ * @param videoTrack 视频流类型
+ * - {@link AliRtcVideoTrackNo} : 无效参数，设置不会有任何效果
+ * - {@link AliRtcVideoTrackCamera} : 相机流
+ * - {@link AliRtcVideoTrackScreen} : 屏幕共享流
+ * - {@link AliRtcVideoTrackBoth} : 相机流和屏幕共享流
+ * @param subVideo 是否订阅远端用户的视频流
+ * - true:订阅指定用户的视频流
+ * - false:停止订阅指定用户的视频流
+ * @param audioTrack 音频流类型
+ * - AliRtcAudioTrackNo: 无效参数，设置不会有任何效果
+ * - AliRtcAudioTrackMic: 麦克风流
+ * - AliRtcAudioTrackDual: 第二条音频流
+ * - AliRtcAudioTrackBoth: 麦克风流和第二条音频流
+ * @param subAudio 是否订阅远端用户的音频流
+ * - true:订阅指定用户的音频流
+ * - false:停止订阅指定用户的音频流
+ * @return
+ * - 0:设置成功
+ * - <0:设置失败
+ * @note
+ * - 这个接口标识当前的操作的流是，之前已设置的流不会发生变化
+ */
+- (int)subscribeRemoteMediaStream:(NSString *_Nonnull)uid videoTrack:(AliRtcVideoTrack)videoTrack subVideo:(BOOL)subVideo audioTrack:(AliRtcAudioTrack)audioTrack subAudio:(BOOL)subAudio;
+
+/**
+ * @brief 停止/恢复订阅远端用户的音视频流
+ * @param uid 用户ID，从App server分配的唯一标示符
+ * @param videoTrack 视频流类型
+ * - {@link AliRtcVideoTrackNo} : 无效参数，设置不会有任何效果
+ * - {@link AliRtcVideoTrackCamera} : 相机流
+ * - {@link AliRtcVideoTrackScreen} : 屏幕共享流
+ * - {@link AliRtcVideoTrackBoth} : 相机流和屏幕共享流
+ * @param subVideo 是否订阅远端用户的视频流
+ * - true:订阅指定用户的视频流
+ * - false:停止订阅指定用户的视频流
+ * @param audioTrack 音频流类型
+ * - AliRtcAudioTrackNo: 无效参数，设置不会有任何效果
+ * - AliRtcAudioTrackMic: 麦克风流
+ * - AliRtcAudioTrackDual: 第二条音频流
+ * - AliRtcAudioTrackBoth: 麦克风流和第二条音频流
+ * @param subAudio 是否订阅远端用户的音频流
+ * - true:订阅指定用户的音频流
+ * - false:停止订阅指定用户的音频流
+ * @return
+ * - 0:设置成功
+ * - <0:设置失败
+ * @note
+ * - 这个接口通过videoTrack、audioTrack通过一个接口把想要的状态告知SDK
+ */
+- (int)subscribeRemoteMediaStream:(NSString *_Nonnull)uid videoTrack:(AliRtcVideoTrack)videoTrack audioTrack:(AliRtcAudioTrack)audioTrack;
+
+/**
  * @brief 订阅目标频道，指定用户的流
  * @param channelId 目标频道
  * @param uid 用户ID，从App server分配的唯一标示符
@@ -4117,6 +4193,25 @@ ALI_RTC_API @interface AliRtcEngine : NSObject <AliRtcEngineDelegate>
  * - 非0: 失败
  */
 - (int)subscribeRemoteDestChannelStream:(NSString *_Nonnull)channelId uid:(NSString *_Nonnull)uid track:(AliRtcVideoTrack)track subAudio:(BOOL)subAudio sub:(BOOL)sub;
+
+/**
+ * @brief 订阅目标频道，指定用户的流
+ * @param channelId 目标频道
+ * @param uid 用户ID，从App server分配的唯一标示符
+ * @param videotrack 订阅的视频流类型
+ * @param audioTrack 音频流类型
+ * - AliRtcAudioTrackNo: 无效参数，设置不会有任何效果
+ * - AliRtcAudioTrackMic: 麦克风流
+ * - AliRtcAudioTrackDual: 第二条音频流
+ * - AliRtcAudioTrackBoth: 麦克风流和第二条音频流
+ * @param sub 是否订阅远端用户的流
+ * - true:订阅指定用户的流
+ * - false:停止订阅指定用户的流
+ * @return
+ * - 0: 成功
+ * - 非0: 失败
+ */
+- (int)subscribeRemoteDestChannelStream:(NSString *_Nonnull)channelId uid:(NSString *_Nonnull)uid videoTrack:(AliRtcVideoTrack)videoTrack audioTrack:(AliRtcAudioTrack)audioTrack sub:(BOOL)sub;
 
 /**
  * @brief 设置是否默认订阅音频流
@@ -5493,6 +5588,32 @@ NS_ASSUME_NONNULL_END
  */
 - (int)sendMediaExtensionMsg:(NSData *_Nonnull)data repeatCount:(int)repeatCount delay:(int)delay isKeyFrame:(bool)isKeyFrame;
 
+
+/**
+ * @brief 发送媒体扩展信息，底层使用SEI实现
+ * @details SDK提供了发送和接收媒体扩展信息的功能，接收端参考 {@link AliRtcEngineDelegate::onMediaExtensionMsgReceived:message:}，使用场景：
+ * - 使用媒体扩展信息传递各类少量数据，长度限制为4K 字节，建议使用文本；
+ *
+ * @param data 扩展信息内容, 长度限制为最大4K 字节
+ * @param repeatCount 重复次数，代表消息冗余度，用于防止网络丢包导致的消息丢失-1表示无限重发，除非再一次调用sendMediaExtensionMsg
+ * @param delay 延迟多少毫秒发送 用来延迟多少毫秒之后再发送SEI，因SEI是附在编码之后的h264/h265流，所以实际的延迟会比设置的延迟略大
+ * @param isKeyFrame 是否只给关键帧加SEI 设置为true，则只给关键帧加SEI信息
+ * @param payloadType 类型，带UUID的请用5，范围是[5,100..254]
+ * @return
+ * - 0: 成功
+ * - <0: 失败
+ *      - ERR_INNER(-1): SDK内部错误，可能的情况为SDK未初始化或者SDK销毁后调用
+ *
+ * @note 使用媒体扩展信息时需要复用音视频数据通道，因此必须控制自定义消息的发送频率和消息数据长度，使用限制如下：
+ * - 每秒最多发送profile设置的fps条消息
+ * - 为了不影响媒体数据的传输质量，自定义消息体长度限制为4K Bytes，可以可以用来传输少量数据
+ * - sendMediaExtensionMsg函数中repeatCount参数为自定义消息冗余度，若大于1，则会发送多次，防止网络丢包导致的消息丢失，此时房间里的其他人也会收到多次相同的消息，需要去重
+ * - 发送的自定义消息，在旁路直播时，房间里的订阅者也一样会收到，设置为-1为永久发送data数据，除非重新设置sendMediaExtensionMsg
+ * - 目前H5端不支持发送和接收媒体扩展信息
+ * - 同一时刻只有一个 sendMediaExtensionMsg 会被发送，意味着调用sendMediaExtensionMsg会覆盖上一次调用的sendMediaExtensionMsg，如果上次的调用没有发送或者没有发送完成；
+ */
+- (int)sendMediaExtensionMsgEx:(NSData *_Nonnull)data repeatCount:(int)repeatCount delay:(int)delay isKeyFrame:(bool)isKeyFrame payloadType:(int)payloadType;
+
 /**
  * @brief 添加水印
  * @details SDK提供了添加水印的功能，适用于推送屏幕流或者相机流场景
@@ -5838,6 +5959,15 @@ NS_ASSUME_NONNULL_END
 -(int) sendDataChannelMessage:(AliRtcDataChannelMsg* _Nonnull)controlMsg;
 
 /** @} */
+
+/**
+ * @brief 开启SEI视频流，内部将使用16x16全黑图片流/20fps
+ * @param enable true=开启 false=关闭
+ * @return
+ * - 0: 成功
+ * - 非0: 失败
+ */
+-(int) enableSEIVideoStream:(bool)enable ;
 
 @end
 

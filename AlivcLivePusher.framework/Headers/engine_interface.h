@@ -1039,6 +1039,7 @@ typedef enum {
     typedef struct AliEngineScreenSourcInfo {
         String sourceId;
         String sourceName;
+        bool   sourceIsSelf;
     } AliEngineScreenSourcInfo;
 
     /**
@@ -1061,11 +1062,6 @@ typedef enum {
         char* nonce         = nullptr;
         char* token         = nullptr;
         char* role          = nullptr;
-        char* session  = nullptr;
-        char** gslb    = nullptr;
-        int gslbCount  = 0;
-        char** agent   = nullptr;
-        int agentCount = 0;
         unsigned long long timestamp =0;
         char* tokenType    = nullptr;
     } AliEngineAuthInfo;
@@ -2980,7 +2976,7 @@ typedef enum {
          * @param size 扩展信息长度
          * @note 当一端通过 {@link AliEngine::SendMediaExtensionMsg} 发送信息后，其他端通过该回调接收数据
          */
-        virtual void OnMediaExtensionMsgReceived(const char* uid, const int8_t * message, uint32_t size) {};
+        virtual void OnMediaExtensionMsgReceived(const char* uid, const uint8_t payloadType, const int8_t * message, uint32_t size) {};
 
         /**
          * @brief 音频设备状态变更
@@ -3774,6 +3770,27 @@ typedef enum {
          */
         virtual int SubscribeRemoteAudioStream(const char* uid, bool sub) = 0;
 
+
+        /**
+         * @brief 停止/恢复订阅特定远端用户的音频流
+         * @param uid 用户ID，从App server分配的唯一标示符
+         * @param track 视频流类型
+         * - AliEngineAudioTrackNo: 无效参数，设置不会有任何效果
+         * - AliEngineAudioTrackMic: 麦克风流
+         * - AliEngineAudioTrackDual: 第二条音频流
+         * - AliEngineAudioTrackBoth: 麦克风流和第二条音频流
+         * @param sub 是否订阅远端用户的音频流
+         * - true:订阅指定用户的音频流
+         * - false:停止订阅指定用户的音频流
+         * @return
+         * - 0: 成功
+         * - 非0: 失败
+         * @note
+         * - 如果之前有调用过 AliEngine::SubscribeAllRemoteAudioStreams(false) 停止订阅所有远端音频，则此接口调用无效；
+         * - {@link AliEngine::SubscribeAllRemoteAudioStreams} 是全局控制，SubscribeRemoteAudioStream 是单独控制。
+         */
+        virtual int SubscribeRemoteAudioStream(const char* uid, AliEngineAudioTrack track, bool sub) = 0;
+
         /**
          * @brief 设置是否默认订阅视频流
          * @param sub 是否默认订阅视频流
@@ -3844,6 +3861,54 @@ typedef enum {
          * - <0:设置失败
          */
         virtual int SubscribeRemoteMediaStream(const char* uid, AliEngineVideoTrack videoTrack, bool subVideo,  bool subAudio) = 0;
+
+        /**
+         * @brief 停止/恢复订阅远端用户的音视频流
+         * @param uid 用户ID，从App server分配的唯一标示符
+         * @param videoTrack 视频流类型
+         * - AliEngineVideoTrackNo: 无效参数，设置不会有任何效果
+         * - AliEngineVideoTrackCamera: 相机流
+         * - AliEngineVideoTrackScreen: 屏幕共享流
+         * - AliEngineVideoTrackBoth: 相机流和屏幕共享流
+         * @param subVideo 是否订阅远端用户的视频流
+         * - true:订阅指定用户的视频流
+         * - false:停止订阅指定用户的视频流
+         * @param audioTrack 音频流类型
+         * - AliEngineAudioTrackNo: 无效参数，设置不会有任何效果
+         * - AliEngineAudioTrackMic: 麦克风流
+         * - AliEngineAudioTrackDual: Dual音频流
+         * - AliEngineAudioTrackBoth: 麦克风流 + Dual音频流
+         * @param subAudio 是否订阅远端用户的音频流
+         * - true:订阅指定用户的音频流
+         * - false:停止订阅指定用户的音频流
+         * @return
+         * - 0:设置成功
+         * - <0:设置失败
+         * @note
+         * - 这个接口标识当前的操作的流是，之前已设置的流不会发生变化
+         */
+        virtual int SubscribeRemoteMediaStream(const char* uid, AliEngineVideoTrack videoTrack, bool subVideo, AliEngineAudioTrack audioTrack, bool subAudio) = 0;
+
+        /**
+         * @brief 停止/恢复订阅远端用户的音视频流
+         * @param uid 用户ID，从App server分配的唯一标示符
+         * @param videoTrack 视频流类型
+         * - AliEngineVideoTrackNo: 取消所有的视频流
+         * - AliEngineVideoTrackCamera: 只订阅相机流
+         * - AliEngineVideoTrackScreen: 只订阅屏幕共享流
+         * - AliEngineVideoTrackBoth: 订阅相机流和屏幕共享流
+         * @param audioTrack 音频流类型
+         * - AliEngineAudioTrackNo: 取消所有的音频流
+         * - AliEngineAudioTrackMic: 只订阅mic流
+         * - AliEngineAudioTrackDual: 只订阅dual音频流
+         * - AliEngineAudioTrackBoth: 订阅所有的音频流
+         * @return
+         * - 0:设置成功
+         * - <0:设置失败
+         * @note
+         * - 这个接口通过videoTrack、audioTrack通过一个接口把想要的状态告知SDK
+         */
+        virtual int SubscribeRemoteMediaStream(const char* uid, AliEngineVideoTrack videoTrack, AliEngineAudioTrack audioTrack) = 0;
         
         /**
          * @brief 订阅目标频道，指定用户的流
@@ -3861,6 +3926,29 @@ typedef enum {
          * - 非0: 失败
          */
         virtual int SubscribeRemoteDestChannelStream(const char* channelId, const char* uid, AliEngineVideoTrack track, bool sub_audio, bool sub) = 0;
+
+        /**
+         * @brief 订阅目标频道，指定用户的流
+         * @param channelId 目标频道
+         * @param uid 用户ID，从App server分配的唯一标示符
+         * @param videoTrack 视频流类型
+         * - AliEngineVideoTrackNo: 取消所有的视频流
+         * - AliEngineVideoTrackCamera: 相机流
+         * - AliEngineVideoTrackScreen: 屏幕共享流
+         * - AliEngineVideoTrackBoth: 相机流和屏幕共享流
+         * @param audioTrack 音频流类型
+         * - AliEngineAudioTrackNo: 取消所有的音频流
+         * - AliEngineAudioTrackMic: 麦克风流
+         * - AliEngineAudioTrackDual: Dual音频流
+         * - AliEngineAudioTrackBoth: 麦克风流 + Dual音频流
+         * @param sub 是否订阅远端用户的流
+         * - true:订阅指定用户的流
+         * - false:停止订阅指定用户的流
+         * @return
+         * - 0: 成功
+         * - 非0: 失败
+         */
+        virtual int SubscribeRemoteDestChannelStream(const char* channelId, const char* uid, AliEngineVideoTrack videoTrack, AliEngineAudioTrack audioTrack, bool sub) = 0;
         
  
         /**
@@ -5035,6 +5123,36 @@ typedef enum {
          */
         virtual int SendMediaExtensionMsg(const int8_t * message,
                                           uint32_t length, int32_t repeatCount, uint32_t delay, bool isKeyFrame) = 0;
+        
+        
+        
+        /**
+         * @brief 发送媒体扩展信息，内部使用SEI实现
+         * @details SDK提供了发送和接收媒体扩展信息的功能，接收端参考 {@link AliEngineEventListener::OnMediaExtensionMsgReceived}，使用场景：
+         * - 使用媒体扩展信息传递时间戳，计算端到端的网络延迟，或者跟自身其他业务做数据同步
+         * - 使用媒体扩展信息传递位控制信息。目前可以传递4K Byte数据，用于自身业务上的少量数据传输
+         *
+         * @param message 扩展信息内容, 长度限制为最大4*1024字节
+         * @param length 扩展信息长度，长度限制为最大4*1024字节
+         * @param repeatCount 重复次数，代表消息冗余度，用于防止网络丢包导致的消息丢失
+         * @param delay 延迟多少发出去，单位毫秒
+         * @param isKeyFrame 是否只在关键帧上增加SEI
+         * @param payloadType 数据类型字段，payload=5 payload=[100..254]
+         * @return
+         * - 0: 成功
+         * - <0: 失败
+         *      - ERR_INNER(-1): SDK内部错误，可能的情况为SDK未初始化或者SDK销毁后调用
+         *
+         * @note 使用媒体扩展信息时需要复用音视频数据通道，因此必须控制自定义消息的发送频率和消息数据长度，使用限制如下：
+         * - 因为SEI信息是放到编码器后的流里面，因此每秒最多发送Profile设置的fps条消息
+         * - 为了不影响媒体数据的传输质量，自定义消息体长度限制为最大 4K Bytes，可以用来传输各类信息；
+         * - sendMediaExtensionMsg函数中repeatCount参数为自定义消息冗余度，若大于1，则会发送多次，防止网络丢包导致的消息丢失，此时房间里的其他人也会收到多次相同的消息，需要去重
+         * - 发送的自定义消息，在旁路直播时，房间里的订阅者也一样会收到,如果-1，则无限重发，一直到再次调用SendMediaExtensionMsg设置消息；
+         * - 目前H5端不支持发送和接收媒体扩展信息
+         */
+        virtual int SendMediaExtensionMsgEx(const int8_t * message,
+                                          uint32_t length, int32_t repeatCount, uint32_t delay, bool isKeyFrame, int32_t payloadType) = 0;
+
 
         /**
          * @brief 根据桌面Id进行屏幕分享
@@ -5114,6 +5232,16 @@ typedef enum {
          * - <0: 失败
         */
         virtual int UpdateScreenShareConfig(const AliEngineScreenShareConfig& config) = 0;
+        
+        /**
+        * @brief 判断windowId是否有效果，
+        * @param windowId 窗口ID (可通过GetScreenShareSourceInfo接口获取)
+        * @return
+        * - true: 有效
+        * - <0: 无效
+        */
+        virtual bool CheckWindowSourceVaild(unsigned int windowId) = 0;
+
 
         /**
          * @brief 获取屏幕共享配置
@@ -5616,6 +5744,15 @@ typedef enum {
 		*/
 		virtual int SetEncoderManufacturerSpecificParam(AliEngineVideoTrack type, AliEngineVideoCodecManufacturer codecManufacturer, const Dictionary &codecSpecific) = 0;
 
+   
+        /**
+         * @brief 开启SEI视频流，内部将使用16x16全黑图片流/20fps
+         * @param enable true=开启 false=关闭
+         * @return
+         * - 0: 成功
+         * - 非0: 失败
+         */
+        virtual int EnableSEIVideoStream(bool enable) = 0 ;
     };
     /// The declarations listed above are subject to change without notice.
 
