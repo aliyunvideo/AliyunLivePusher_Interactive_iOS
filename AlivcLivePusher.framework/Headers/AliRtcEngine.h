@@ -33,6 +33,16 @@ typedef NS_ENUM(NSUInteger, AliRtcVideoTrack) {
 };
 
 /**
+ *@brief 视频缩放时机
+ */
+typedef NS_ENUM(NSUInteger, AliRtcCapturePipelineScaleMode) {
+    /* 采集后立即进行缩放，默认 */
+    AliRtcCapturePipelineScaleModePre = 0,
+    /* 编码时进行缩放 */
+    AliRtcCapturePipelineScaleModePost = 1,
+};
+
+/**
  * @brief 音频流类型
  */
 typedef NS_ENUM(NSUInteger, AliRtcAudioTrack) {
@@ -1146,6 +1156,10 @@ typedef NS_ENUM(NSInteger, AliRtcErrorCode) {
     AliRtcErrSubscribeDualStreamFailed      = 0x01010553,
     /** 订阅屏幕共享失败 */
     AliRtcErrSubscribeScreenShareFailed     = 0x01010554,
+    /** 订阅RTS流失败*/
+    AliRtcErrSubscribeRtsStreamFailed = 0x01010556,
+    /** 暂停RTS流失败*/
+    AliRtcErrPauseRtsStreamFailed = 0x01010557,
 
     /****************************************************
      * 其他错误码
@@ -1584,7 +1598,7 @@ ALI_RTC_API @interface AliRtcAudioEffectConfig : NSObject
  */
 ALI_RTC_API @interface AliRtcAudioFrame : NSObject
 
-@property (nonatomic, assign) long dataPtr;
+@property (nonatomic, assign) void* _Nullable dataPtr;
 @property (nonatomic, assign) int numOfSamples;
 @property (nonatomic, assign) int bytesPerSample;
 @property (nonatomic, assign) int numOfChannels;
@@ -1600,10 +1614,10 @@ ALI_RTC_API @interface AliRtcVideoDataSample : NSObject
 @property (nonatomic, assign) AliRtcVideoFormat format;
 @property (nonatomic, assign) AliRtcBufferType type;
 @property (nonatomic, assign) CVPixelBufferRef _Nullable pixelBuffer;
-@property (nonatomic, assign) long dataPtr;
-@property (nonatomic, assign) long dataYPtr;
-@property (nonatomic, assign) long dataUPtr;
-@property (nonatomic, assign) long dataVPtr;
+@property (nonatomic, assign) uint8_t* _Nullable dataPtr;
+@property (nonatomic, assign) uint8_t* _Nullable dataYPtr;
+@property (nonatomic, assign) uint8_t* _Nullable dataUPtr;
+@property (nonatomic, assign) uint8_t* _Nullable dataVPtr;
 @property (nonatomic, assign) long dataLength;
 @property (nonatomic, assign) int strideY;
 @property (nonatomic, assign) int strideU;
@@ -2490,6 +2504,31 @@ ALI_RTC_API @protocol AliRtcEngineDelegate <NSObject>
 
 
 /**
+ * @brief 预建联数目超限回调
+ * @details 应用调用 {@link AliRtcEngine::subscribeStreamByRtsUrl} 方法时如果超出预建联流数上限，则会销毁最早的RTS流，
+ * 停止订阅的结果将在{@link AliRtcEngineDelegate::onStopSubscribeStreamByRtsUrlResult}中回调。
+ * @param uid 销毁订阅RTS流的用户ID
+ * @param url 销毁订阅RTS流的URL
+ */
+- (void)onSubscribedRtsStreamBeyondLimit:(NSString *_Nonnull)uid url:(NSString *_Nonnull)url;
+
+/**
+ * @brief 使用RTS UID 暂停订阅结果回调
+ * @details 应用调用 {@link AliEngine::PauseRtsStreamByRtsUserId} 方法时，该回调表示暂停订阅成功/失败
+ * @param uid 暂停订阅的用户ID
+ * @param result 暂停订阅结果，成功返回0，失败返回错误码
+ */
+- (void)onPauseRtsStreamResult:(NSString *_Nonnull)uid result:(int)result;
+
+/**
+ * @brief 使用RTS UID 恢复订阅结果回调
+ * @details 应用调用 {@link AliEngine::ResumeRtsStreamByRtsUserId} 方法时，该回调表示恢复订阅成功/失败
+ * @param uid 恢复订阅的用户ID
+ * @param result 恢复订阅结果，成功返回0，失败返回错误码
+ */
+- (void)onResumeRtsStreamResult:(NSString *_Nonnull)uid result:(int)result;
+
+/**
  * @brief 远端用户（通信模式）/（互动模式，主播角色）加入频道回调
  * @details 该回调在以下场景会被触发
  * - 通信模式：远端用户加入频道会触发该回调，如果当前用户在加入频道前已有其他用户在频道中，当前用户加入频道后也会收到已加入频道用户的回调
@@ -3253,6 +3292,16 @@ ALI_RTC_API @protocol AliRtcAudioFrameDelegate <NSObject>
 - (BOOL)onRemoteUserAudioFrame:(NSString *_Nullable)uid frame:(AliRtcAudioFrame* _Nonnull)frame;
 @end
 
+ALI_RTC_API @protocol AliRtcEngineDestroyDelegate <NSObject>
+@optional
+
+/**
+ * @brief 用户调用需要鉴权的接口，服务端返回信息过期
+ * @note 该回调触发代表鉴权信息已过期，想要继续在会中，需要重新入会，参考 {@link AliRtcEngine::joinChannel:name:onResultWithUserId:}
+ */
+- (void)onDestroyCompletion;
+@end
+
 #pragma mark - 接口主类
 /**
  * @defgroup AliRtc_ios AliRtcEngine
@@ -3284,6 +3333,15 @@ ALI_RTC_API @interface AliRtcEngine : NSObject <AliRtcEngineDelegate>
  * @note 为避免死锁，不建议在任何SDK的回调中调用本方法
  */
 + (void)destroy;
+
+/**
+ * @brief 销毁AliRtcEngine实例
+ * @param delegate 用于接收AliRTC销毁回调的代理。
+ * @details 调用该方法将会释放所有内部使用的资源,当完成音视频通信之后都建议调用该方法释放实例.调用该方法后，你将不能再使用 {@link AliRtcEngine} 的其他方法和任何回调，如需要再次使用需要重新调用 {@link AliRtcEngine::sharedInstance:extras:} 方法创建一个新的实例。
+ * @note 该接口为异步接口，需要等待onDestroyCompletion回调之后才能执行其他方法，为避免主线程阻塞，建议开发者放在子线程调用该方法，但需要注意的是如需在销毁后再次创建 {@link AliRtcEngine} 实例，请开发者务必保证 destroy 方法执行结束后再创建实例。
+ * @note 为避免死锁，不建议在任何SDK的回调中调用本方法
+ */
++ (void)destroy:(id<AliRtcEngineDestroyDelegate>_Nullable)delegate;
 
 /**
  * @brief 查询SDK当前版本号
@@ -3724,6 +3782,18 @@ ALI_RTC_API @interface AliRtcEngine : NSObject <AliRtcEngineDelegate>
 - (int)subscribeStreamByRtsUrl:(NSString *_Nonnull)rtsUrl uid:(NSString *_Nonnull)uid;
 
 /**
+ * @brief 根据RtsUrl拉流，目前同时只支持拉一路流
+ * @param rtsUrl rts url，不携带roomserver信息
+ * @param uid 用户id，由调用者指定，并且需要保持唯一性
+ * @param preLoad 配置是否为预建联
+ * @return
+ * - 0: 成功
+ * - 非0: 失败
+ * @note 该接口用于推送本地音视频流到指定的rts url
+ */
+- (int)subscribeStreamByRtsUrl:(NSString *_Nonnull)rtsUrl uid:(NSString *_Nonnull)uid preLoad:(BOOL)preLoad;
+
+/**
  * @brief 根据RtsUrl停止拉流
  * @param rtsUrl rts url，不携带roomserver信息
  * @return
@@ -3732,6 +3802,31 @@ ALI_RTC_API @interface AliRtcEngine : NSObject <AliRtcEngineDelegate>
  * @note 该接口用于停止拉取音视频流
  */
 - (int)stopSubscribeStreamByRtsUserId:(NSString *_Nonnull)uid;
+
+/**
+ * @brief 根据uid，暂停从服务端订阅RTS流
+ * @param uid 用户id，由调用者指定，并且需要保持唯一性
+ * @return
+ * - 0: 成功
+ * - 非0: 失败
+ */
+- (int)pauseRtsStreamByRtsUserId:(NSString *_Nonnull)uid;
+
+/**
+ * @brief 根据uid，恢复从服务端订阅RTS流
+ * @param uid 用户id，由调用者指定，并且需要保持唯一性
+ * @return
+ * - 0: 成功
+ * - 非0: 失败
+ */
+- (int)resumeRtsStreamByRtsUserId:(NSString *_Nonnull)uid;
+
+/** 
+ *@brief 设置采集缩放时机，视频数据是采集的时候立即缩放还是编码时才进行缩放。
+ *@param mode 控制采集缩放时机的模式，默认是采集的时候立即缩放
+ *@note 必须在打开摄像头之前设置，如 {@link AliRtcEngine::startPreview}，{@link AliRtcEngine::joinChannel:name:onResult:} / {@link AliRtcEngine::joinChannel:name:onResultWithUserId:}之前设置
+ */
+-(void)setCapturePipelineScaleMode:(AliRtcCapturePipelineScaleMode)mode;
 
 /**
  * @brief 设置相机流视频编码属性
@@ -4178,6 +4273,60 @@ ALI_RTC_API @interface AliRtcEngine : NSObject <AliRtcEngineDelegate>
 - (int)subscribeRemoteMediaStream:(NSString *_Nonnull)uid videoTrack:(AliRtcVideoTrack)videoTrack audioTrack:(AliRtcAudioTrack)audioTrack;
 
 /**
+ * @brief 停止/恢复订阅远端用户的音视频流
+ * @param uid 用户ID，从App server分配的唯一标示符
+ * @param videoTrack 视频流类型
+ * - {@link AliRtcVideoTrackNo} : 无效参数，设置不会有任何效果
+ * - {@link AliRtcVideoTrackCamera} : 相机流
+ * - {@link AliRtcVideoTrackScreen} : 屏幕共享流
+ * - {@link AliRtcVideoTrackBoth} : 相机流和屏幕共享流
+ * @param subVideo 是否订阅远端用户的视频流
+ * - true:订阅指定用户的视频流
+ * - false:停止订阅指定用户的视频流
+ * @param audioTrack 音频流类型
+ * - AliRtcAudioTrackNo: 无效参数，设置不会有任何效果
+ * - AliRtcAudioTrackMic: 麦克风流
+ * - AliRtcAudioTrackDual: 第二条音频流
+ * - AliRtcAudioTrackBoth: 麦克风流和第二条音频流
+ * @param subAudio 是否订阅远端用户的音频流
+ * - true:订阅指定用户的音频流
+ * - false:停止订阅指定用户的音频流
+ * @return
+ * - 0:设置成功
+ * - <0:设置失败
+ * @note
+ * - 这个接口标识当前的操作的流是，之前已设置的流不会发生变化
+ */
+- (int)subscribeRemoteMediaStream:(NSString *_Nonnull)uid videoTrack:(AliRtcVideoTrack)videoTrack subVideo:(BOOL)subVideo audioTrack:(AliRtcAudioTrack)audioTrack subAudio:(BOOL)subAudio;
+
+/**
+ * @brief 停止/恢复订阅远端用户的音视频流
+ * @param uid 用户ID，从App server分配的唯一标示符
+ * @param videoTrack 视频流类型
+ * - {@link AliRtcVideoTrackNo} : 无效参数，设置不会有任何效果
+ * - {@link AliRtcVideoTrackCamera} : 相机流
+ * - {@link AliRtcVideoTrackScreen} : 屏幕共享流
+ * - {@link AliRtcVideoTrackBoth} : 相机流和屏幕共享流
+ * @param subVideo 是否订阅远端用户的视频流
+ * - true:订阅指定用户的视频流
+ * - false:停止订阅指定用户的视频流
+ * @param audioTrack 音频流类型
+ * - AliRtcAudioTrackNo: 无效参数，设置不会有任何效果
+ * - AliRtcAudioTrackMic: 麦克风流
+ * - AliRtcAudioTrackDual: 第二条音频流
+ * - AliRtcAudioTrackBoth: 麦克风流和第二条音频流
+ * @param subAudio 是否订阅远端用户的音频流
+ * - true:订阅指定用户的音频流
+ * - false:停止订阅指定用户的音频流
+ * @return
+ * - 0:设置成功
+ * - <0:设置失败
+ * @note
+ * - 这个接口通过videoTrack、audioTrack通过一个接口把想要的状态告知SDK
+ */
+- (int)subscribeRemoteMediaStream:(NSString *_Nonnull)uid videoTrack:(AliRtcVideoTrack)videoTrack audioTrack:(AliRtcAudioTrack)audioTrack;
+
+/**
  * @brief 订阅目标频道，指定用户的流
  * @param channelId 目标频道
  * @param uid 用户ID，从App server分配的唯一标示符
@@ -4193,6 +4342,41 @@ ALI_RTC_API @interface AliRtcEngine : NSObject <AliRtcEngineDelegate>
  * - 非0: 失败
  */
 - (int)subscribeRemoteDestChannelStream:(NSString *_Nonnull)channelId uid:(NSString *_Nonnull)uid track:(AliRtcVideoTrack)track subAudio:(BOOL)subAudio sub:(BOOL)sub;
+
+/**
+ * @brief 订阅目标频道，指定用户的流
+ * @param channelId 目标频道
+ * @param uid 用户ID，从App server分配的唯一标示符
+ * @param videotrack 订阅的视频流类型
+ * @param audioTrack 音频流类型
+ * - AliRtcAudioTrackNo: 无效参数，设置不会有任何效果
+ * - AliRtcAudioTrackMic: 麦克风流
+ * - AliRtcAudioTrackDual: 第二条音频流
+ * - AliRtcAudioTrackBoth: 麦克风流和第二条音频流
+ * @param sub 是否订阅远端用户的流
+ * - true:订阅指定用户的流
+ * - false:停止订阅指定用户的流
+ * @return
+ * - 0: 成功
+ * - 非0: 失败
+ */
+- (int)subscribeRemoteDestChannelStream:(NSString *_Nonnull)channelId uid:(NSString *_Nonnull)uid videoTrack:(AliRtcVideoTrack)videoTrack audioTrack:(AliRtcAudioTrack)audioTrack sub:(BOOL)sub;
+
+/**
+ * @brief 订阅目标频道，所有用户的流
+ * @param channelId 目标频道
+ * @param track 订阅的视频流类型
+ * @param sub_audio 是否订阅远端用户的音频流
+ * - true:订阅目标频道用户的音频流
+ * - false:停止订阅目标频道用户的音频流
+ * @param sub 是否订阅远端频道用户的流
+ * - true:订阅目标频道用户的流
+ * - false:停止目标频道指定用户的流
+ * @return
+ * - 0: 成功
+ * - 非0: 失败
+ */
+- (int)subscribeRemoteDestChannelAllStream:(NSString *_Nonnull)channelId track:(AliRtcVideoTrack)track subAudio:(BOOL)subAudio sub:(BOOL)sub;
 
 /**
  * @brief 订阅目标频道，指定用户的流
@@ -4283,6 +4467,17 @@ ALI_RTC_API @interface AliRtcEngine : NSObject <AliRtcEngineDelegate>
  * @name 设备管理
  * @{
  */
+
+/**
+ * @brief 设置默认音频输出是否从扬声器出声，默认从扬声器出声
+ * @param defaultToSpeakerphone
+ * - YES: 扬声器模式(默认扬声器)
+ * - NO: 听筒模式
+ * @return
+ * - 0: 成功
+ * - <0: 失败
+ */
+- (int)setDefaultAudioRouteToSpeakerphone:(BOOL)defaultToSpeakerphone;
 
 /**
  * @brief 设置音频输出为听筒还是扬声器

@@ -3,7 +3,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#include "AlivcEnv.h"
 /**
  * 一体化基础接口
  */
@@ -45,11 +45,13 @@ OBJC_EXPORT
  */
 @property (nonatomic, class) NSString *IntegrationWay;
 
+
 /**
- * 埋点开关
+ * SDK环境控制
  */
 /****
- * The switch of stat
+ * SDK Env manager
  */
-@property (nonatomic, class) BOOL EnabledStat;
+@property (nonatomic, class, readonly) AlivcEnv *EnvironmentManager;
+
 @end

@@ -142,6 +142,16 @@ namespace AliRTCSdk
     }AliEngineCaptureOutputPreference;
 
     /**
+     *@brief 视频缩放时机
+     */
+    typedef enum {
+        /* 采集后立即进行缩放，默认 */
+        AliEngineCapturePipelineScaleModePre = 0,
+        /* 编码时进行缩放 */
+        AliEngineCapturePipelineScaleModePost = 1,
+    }AliEngineCapturePipelineScaleMode;
+
+    /**
      * @brief 视频宽高比
      */
     typedef enum  {
@@ -663,7 +673,10 @@ typedef enum {
         AliEngineErrorSubscribeScreenShareFailed = 0x01010554,
         /** */
         AliEngineErrorSubscribeDualAudioStreamFailed = 0x01010555,
-
+        /** 订阅RTS流失败*/
+        AliEngineErrorSubscribeRtsStreamFailed = 0x01010556,
+        /** 暂停RTS流失败*/
+        AliEngineErrorPauseRtsStreamFailed = 0x01010557,
         /****************************************************
          * 其他错误码
          ****************************************************/
@@ -2311,6 +2324,7 @@ typedef enum {
 		AliEngineVideoCodecManufacturerX265 = 2,
 		AliEngineVideoCodecManufacturerS265 = 3,
 		AliEngineVideoCodecManufacturerFFMPEG = 4 ,
+        AliEngineVideoCodecManufacturerS264 = 5,
 		AliEngineVideoCodecManufacturerQsvIntel = 0x10,
 		AliEngineVideoCodecManufacturerNvidia = 0x11,
 		AliEngineVideoCodecManufacturerAMD = 0x12,
@@ -2367,6 +2381,16 @@ typedef enum {
       void* data{nullptr};
       int dataLen{0};
     } AliEngineDataChannelMsg;
+
+
+    class ALI_RTC_API AliEngineDestroyCompletionCallback {
+    public:
+        virtual ~AliEngineDestroyCompletionCallback() = default;
+        /**
+         * @brief 销毁完成回调
+         */
+        virtual void onDestroyCompletion() {};
+    };
 
     /**
      * @defgroup AliEngineCallback 回调及监听
@@ -2539,7 +2563,31 @@ typedef enum {
          * @param result 取消订阅结果，成功返回0，失败返回错误码
          */
         virtual void OnStopSubscribeStreamByRtsUrlResult(const char* uid, int result) {};
+        
+        /**
+         * @brief 预建联数目超限回调
+         * @details 应用调用 {@link AliEngine::SubscribeStreamByRtsUrl} 方法时如果超出预建联流数上限，则会停止订阅并销毁最早的RTS流，停止订阅的结果将在{@link AliEngineEventListener::OnStopSubscribeStreamByRtsUrlResult}中回调。
+         * @param uid 销毁订阅RTS流的用户ID
+         * @param url 销毁订阅RTS流的URL
+         */
+        virtual void OnSubscribedRtsStreamBeyondLimit(const char* uid, const char* url) {};
+        
+        /**
+         * @brief 使用RTS UID 暂停订阅结果回调
+         * @details 应用调用 {@link AliEngine::PauseRtsStreamByRtsUserId} 方法时，该回调表示暂停订阅成功/失败
+         * @param uid 暂停订阅的用户ID
+         * @param result 暂停订阅结果，成功返回0，失败返回错误码
+         */
+        virtual void OnPauseRtsStreamResult(const char* uid, int result) {};
 
+        /**
+         * @brief 使用RTS UID 恢复订阅结果回调
+         * @details 应用调用 {@link AliEngine::ResumeRtsStreamByRtsUserId} 方法时，该回调表示恢复订阅成功/失败
+         * @param uid 恢复订阅的用户ID
+         * @param result 恢复订阅结果，成功返回0，失败返回错误码
+         */
+        virtual void OnResumeRtsStreamResult(const char* uid, int result) {};
+        
         /**
          * @brief 远端用户的音视频流发生变化回调
          * @details 该回调在以下场景会被触发
@@ -3205,7 +3253,7 @@ typedef enum {
          * @note 该方法为同步调用,需要等待内部资源释放之后才能执行其他方法,为避免主线程阻塞，建议开发者放在子线程调用该方法，但需要注意的是如需在销毁后再次创建 {@link AliEngine} 实例，请开发者务必保证 Destroy 方法执行结束后再创建实例。
          * @note 为避免死锁，不建议在任何SDK的回调中调用本方法
          */
-        static void Destroy();
+        static void Destroy(AliEngineDestroyCompletionCallback *callback = nullptr);
         
         /**
          * @brief 查询sdk当前版本号
@@ -3360,6 +3408,11 @@ typedef enum {
          * @return 用户角色类型
          */
         virtual AliEngineClientRole GetClientRole() = 0;
+        
+        /**
+         *@brief 设置采集缩放时机，视频数据是采集的时候立即缩放还是编码时才进行缩放。
+         */
+        virtual void SetCapturePipelineScaleMode(const AliEngineCapturePipelineScaleMode mode) = 0;
 
         /**
          * @brief 设置相机流视频编码属性
@@ -3636,7 +3689,25 @@ typedef enum {
          * - 非0: 失败
          * @note 该接口用于推送本地音视频流到指定的rts url
          */
-        virtual int SubscribeStreamByRtsUrl(const char* rtsUrl, const char* uid) = 0;
+        virtual int SubscribeStreamByRtsUrl(const char* rtsUrl, const char* uid, bool preLoad = false) = 0;
+
+        /**
+         * @brief 根据uid，暂停从服务端订阅RTS流
+         * @param uid 用户id，由调用者指定，并且需要保持唯一性
+         * @return
+         * - 0: 成功
+         * - 非0: 失败
+         */
+        virtual int PauseRtsStreamByRtsUserId(const char* uid) = 0;
+
+        /**
+         * @brief 根据uid，恢复从服务端订阅RTS流
+         * @param uid 用户id，由调用者指定，并且需要保持唯一性
+         * @return
+         * - 0: 成功
+         * - 非0: 失败
+         */
+        virtual int ResumeRtsStreamByRtsUserId(const char* uid) = 0;
 
         /**
          * @brief 根据Rts user id停止拉流
@@ -3769,7 +3840,6 @@ typedef enum {
          * - {@link AliEngine::SubscribeAllRemoteAudioStreams} 是全局控制，SubscribeRemoteAudioStream 是单独控制。
          */
         virtual int SubscribeRemoteAudioStream(const char* uid, bool sub) = 0;
-
 
         /**
          * @brief 停止/恢复订阅特定远端用户的音频流
@@ -3949,6 +4019,22 @@ typedef enum {
          * - 非0: 失败
          */
         virtual int SubscribeRemoteDestChannelStream(const char* channelId, const char* uid, AliEngineVideoTrack videoTrack, AliEngineAudioTrack audioTrack, bool sub) = 0;
+        
+        /**
+         * @brief 订阅目标频道，所有用户的流
+         * @param channelId 目标频道
+         * @param track 订阅的视频流类型
+         * @param sub_audio 是否订阅远端用户的音频流
+         * - true:订阅目标频道用户的音频流
+         * - false:停止订阅目标频道用户的音频流
+         * @param sub 是否订阅远端频道用户的流
+         * - true:订阅目标频道用户的流
+         * - false:停止订阅目标频道用户的流
+         * @return
+         * - 0: 成功
+         * - 非0: 失败
+         */
+        virtual int SubscribeRemoteDestChannelAllStream(const char* channelId, AliEngineVideoTrack track, bool sub_audio, bool sub) = 0;
         
  
         /**
@@ -5644,6 +5730,13 @@ typedef enum {
         */
        virtual long long GetNetworkTime() = 0;
 
+#if defined(WEBRTC_ANDROID)
+        /**
+         * @brief 获取cpu和内存的时间间隔
+         * @return 时间间隔
+        */
+       virtual int GetCpuAndMemInterval() = 0;
+#endif
         /**
          * @brief 发送data channel 消息
          * @param msg 消息
