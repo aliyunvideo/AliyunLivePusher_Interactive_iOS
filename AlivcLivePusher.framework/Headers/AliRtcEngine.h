@@ -1393,6 +1393,20 @@ typedef NS_ENUM(NSUInteger, AliRtcBokehScaleModel) {
 };
 
 /**
+ * @brief 视频流镜像模式
+*/
+typedef NS_ENUM(NSUInteger, AliRtcVideoPipelineMirrorMode) {
+    /** 预览和编码均关闭镜像 */
+    AliRtcVideoPipelineMirrorModeNoMirror = 0,
+    /** 预览和编码均打开镜像 */
+    AliRtcVideoPipelineMirrorModeBothMirror = 1,
+    /** 仅预览打开镜像 */
+    AliRtcVideoPipelineMirrorModeOnlyPreviewMirror = 2,
+    /** 仅推流打开镜像 */
+    AliRtcVideoPipelineMirrorModeOnlyPublishMirror = 3,
+};
+
+/**
  * @brief 本地视频统计信息
  */
 ALI_RTC_API @interface AliRtcLocalVideoStats : NSObject
@@ -1677,6 +1691,7 @@ ALI_RTC_API @interface AliRtcCameraCapturerConfiguration : NSObject
 
 @property (nonatomic) AliRtcCaptureOutputPreference preference;
 @property (nonatomic) AliRtcCameraDirection cameraDirection;
+@property (nonatomic) int fps;
 
 @end
 
@@ -2376,6 +2391,26 @@ typedef NS_ENUM(NSInteger, AliRtcLocalDeviceExceptionType) {
     AliRtcLocalDeviceExceptionTypeVideoDeviceException = 13
 };
 
+/**
+ * @brief 本地音频采集状态回调
+ */
+typedef NS_ENUM(NSInteger, AliRtcLocalAudioStateType) {
+    AliRtcLocalAudioStateTypeStarting = 0,
+    AliRtcLocalAudioStateTypeStarted = 1,
+    AliRtcLocalAudioStateTypeStopping = 2,
+    AliRtcLocalAudioStateTypeStopped = 3,
+};
+
+/**
+ * @brief 本地视频采集状态回调
+ */
+typedef NS_ENUM(NSInteger, AliRtcLocalVideoStateType) {
+    AliRtcLocalVideoStateTypeStarting = 0,
+    AliRtcLocalVideoStateTypeStarted = 1,
+    AliRtcLocalVideoStateTypeStopping = 2,
+    AliRtcLocalVideoStateTypeStopped = 3,
+};
+
 #pragma mark - 回调
 /**
  * @defgroup AliRtcEngineDelegate_ios AliRtcEngineDelegate
@@ -2444,7 +2479,16 @@ ALI_RTC_API @protocol AliRtcEngineDelegate <NSObject>
  */
 - (void)onAudioPublishStateChanged:(AliRtcPublishState)oldState newState:(AliRtcPublishState)newState elapseSinceLastState:(NSInteger)elapseSinceLastState channel:(NSString *_Nonnull)channel;
 
+/**
+ * @brief 音频推流变更回调
+ * @param track 变化的track，详见 {@link AliRtcAudioTrack}
+ * @param oldState 之前的推流状态，详见 {@link AliRtcPublishState}
+ * @param newState 当前的推流状态，详见 {@link AliRtcPublishState}
+ * @param elapseSinceLastState 状态变更时间间隔(毫秒)
+ * @param channel 当前频道id
+ */
 - (void)onAudioPublishStateChanged:(AliRtcAudioTrack)track oldState:(AliRtcPublishState)oldState newState:(AliRtcPublishState)newState elapseSinceLastState:(NSInteger)elapseSinceLastState channel:(NSString *_Nonnull)channel;
+
 /**
  * @brief 视频推流变更回调
  * @param oldState 之前的推流状态，详见 {@link AliRtcPublishState}
@@ -3198,6 +3242,22 @@ ALI_RTC_API @protocol AliRtcEngineDelegate <NSObject>
 - (void)onLocalDeviceException:(AliRtcLocalDeviceType)deviceType exceptionType:(AliRtcLocalDeviceExceptionType)exceptionType message:(NSString *_Nullable)msg;
 
 /**
+ * @brief 本地音频采集设备状态回调
+ * @param state  设备状态，AliRtcLocalAudioStateType类型
+ * @param msg  设备状态变化的描述信息
+ * @note startAudioCapture 和 stopAudioCapture的结果回调
+ */
+- (void)onLocalAudioStateChanged:(AliRtcLocalAudioStateType)state message:(NSString *_Nullable)msg;
+
+/**
+ * @brief 本地视频采集设备状态回调
+ * @param state  设备状态，AliRtcLocalVideoStateType类型
+ * @param msg  设备状态变化的描述信息
+ * @note startAudioCapture 和 stopAudioCapture的结果回调
+ */
+- (void)onLocalVideoStateChanged:(AliRtcLocalVideoStateType)state message:(NSString *_Nullable)msg;
+
+/**
  * @brief 伴奏控制消息
  * @param uid 用户
  * @param controlMsg 消息
@@ -3881,13 +3941,44 @@ ALI_RTC_API @interface AliRtcEngine : NSObject <AliRtcEngineDelegate>
  *
  * @note
  * - SDK默认设置推送音频流，加入频道前调用此接口设置推送音频流，将在加入频道成功时生效，加入频道成功后可以随时调用此接口开启/关闭音频流推送
- * - 若当前频道模式为 {@link AliRtcInteractivelive} 模式，只有用户角色为 {@link AliRtcClientRoleInteractive} 时SDK才会允许允许推送视频流，因此该模式下调用此接口设置推流时，需要同时配合调用接口 {@link AliRtcEngine::setClientRole:} 更改角色
- * - 本地音频流内容默认为麦克风采集音频，如需自定义输入音频推送内容，可参考接口 {@link AliRtcEngine::setExternalAudioSource:withSampleRate:channelsPerFrame:} 使用外部音频输入替换麦克风采集
+ * - 若当前频道模式为 {@link AliRtcInteractivelive} 模式，只有用户角色为 {@link AliRtcClientRoleInteractive} 时SDK才会允许推送视频流，因此该模式下调用此接口设置推流时，需要同时配合调用接口 {@link AliRtcEngine::setClientRole:} 更改角色
+ * - 本地音频流内容默认为麦克风采集音频，如需自定义输入音频推送内容，可参考接口 {@link AliRtcEngine::addExternalAudioStream:AliRtcExternalAudioStreamConfig:} 使用外部音频输入替换麦克风采集
  * - 本地音频推流结果发生变化时，SDK会触发 {@link AliRtcEngineDelegate:onAudioPublishStateChanged:newState:elapseSinceLastState:channel:} 回调通知音频推流最新状态
  */
 - (int)publishLocalAudioStream:(BOOL)enabled;
 
+/**
+ * @brief 是否推送第二条音频流
+ * @param enabled 是否开启/关闭推送第二条音频流
+ * - YES: 开启第二条音频流推送
+ * - NO: 关闭第二条音频流推送
+ * @return
+ * - 0: 设置成功
+ * - <0: 设置失败
+ *  - AliRtcErrInner: SDK内部状态错误，需检查是否创建SDK实例成功
+ *
+ * @note
+ * - SDK默认设置不会推送第二条音频流，加入频道前调用此接口设置是否推送第二条音频流，将在加入频道成功时生效，加入频道成功后可以随时调用此接口开启/关闭第二条音频流推送
+ * - 若当前频道模式为 {@link AliRtcInteractivelive} 模式，只有用户角色为 {@link AliRtcClientRoleInteractive} 时SDK才会允许推送第二条视频流，因此该模式下调用此接口设置推流时，需要同时配合调用接口 {@link AliRtcEngine::setClientRole:} 更改角色
+ * - 第二条音频流内容，需要设置自定义输入音频推送内容，可参考接口 {@link AliRtcEngine::addExternalAudioStream:AliRtcExternalAudioStreamConfig:} 使用外部音频输入
+ * - 本地音频推流结果发生变化时，SDK会触发 {@link AliRtcEngineDelegate:onAudioPublishStateChanged:newState:elapseSinceLastState:channel:} 回调通知音频推流最新状态
+ */
 - (int)publishLocalDualAudioStream:(BOOL)enabled;
+
+/**
+ * @brief 设置预览和推流镜像能力
+ * @param mirrorMode 设置镜像的模式
+ * @return
+ * - 0: 设置成功
+ * - <0: 设置失败
+ *  - AliRtcErrInner: SDK内部状态错误，需检查是否创建SDK实例成功
+ *
+ * @note
+ * - 此接口在入会前和入会后均可以动态设置，SDK内部会记录状态，并在可以操作预览及编码的时候对视频进行操作；
+ * - 使用此接口的优先级会高于setLocalViewConfig&setVideoEncoderConfig
+ * - 此接口与setLocalViewConfig&setVideoEncoderConfig里面的mirror重合，使用时只要使用其中一个即可
+ */
+- (int)setVideoMirrorMode:(AliRtcVideoPipelineMirrorMode)mirrorMode;
 
 /** @} */
 
@@ -4377,25 +4468,6 @@ ALI_RTC_API @interface AliRtcEngine : NSObject <AliRtcEngineDelegate>
  * - 非0: 失败
  */
 - (int)subscribeRemoteDestChannelAllStream:(NSString *_Nonnull)channelId track:(AliRtcVideoTrack)track subAudio:(BOOL)subAudio sub:(BOOL)sub;
-
-/**
- * @brief 订阅目标频道，指定用户的流
- * @param channelId 目标频道
- * @param uid 用户ID，从App server分配的唯一标示符
- * @param videotrack 订阅的视频流类型
- * @param audioTrack 音频流类型
- * - AliRtcAudioTrackNo: 无效参数，设置不会有任何效果
- * - AliRtcAudioTrackMic: 麦克风流
- * - AliRtcAudioTrackDual: 第二条音频流
- * - AliRtcAudioTrackBoth: 麦克风流和第二条音频流
- * @param sub 是否订阅远端用户的流
- * - true:订阅指定用户的流
- * - false:停止订阅指定用户的流
- * @return
- * - 0: 成功
- * - 非0: 失败
- */
-- (int)subscribeRemoteDestChannelStream:(NSString *_Nonnull)channelId uid:(NSString *_Nonnull)uid videoTrack:(AliRtcVideoTrack)videoTrack audioTrack:(AliRtcAudioTrack)audioTrack sub:(BOOL)sub;
 
 /**
  * @brief 设置是否默认订阅音频流

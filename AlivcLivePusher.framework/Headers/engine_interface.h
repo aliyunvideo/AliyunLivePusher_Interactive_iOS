@@ -1111,6 +1111,7 @@ typedef enum {
 #if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS)
         AliEngineCameraDirection cameraDirection;           /** Camera direction settings (for Android/iOS only). See: #AliEngineCameraDirection. */
 #endif
+        int fps = -1 ; /** 默认使用encoder 配置*/
     } AliEngineCameraCapturerConfiguration;
 
     /**
@@ -1921,6 +1922,26 @@ typedef enum {
         AliEngineLocalDeviceExceptionTypeVideoDeviceException = 13
     };
 
+    /**
+     * @brief 本地音频采集状态回调
+     */
+    enum AliEngineLocalAudioStateType {
+        AliEngineLocalAudioStateTypeStarting = 0,
+        AliEngineLocalAudioStateTypeStarted = 1,
+        AliEngineLocalAudioStateTypeStopping = 2,
+        AliEngineLocalAudioStateTypeStopped = 3,
+    };
+
+    /**
+     * @brief 本地视频采集状态回调
+     */
+    enum AliEngineLocalVideoStateType {
+        AliEngineLocalVideoStateTypeStarting = 0,
+        AliEngineLocalVideoStateTypeStarted = 1,
+        AliEngineLocalVideoStateTypeStopping = 2,
+        AliEngineLocalVideoStateTypeStopped = 3,
+    };
+
 
     /**
     * @brief 旁路直播自定义编码参数
@@ -2390,6 +2411,21 @@ typedef enum {
          * @brief 销毁完成回调
          */
         virtual void onDestroyCompletion() {};
+    };
+
+    /**
+     * @brief 视频镜像模式
+     */
+    enum AliEngineVideoPipelineMirrorMode
+    {
+        /** 预览和编码均关闭镜像 */
+        AliEngineVideoPipelineMirrorModeNoMirror = 0,
+        /** 预览和编码均打开镜像 */
+        AliEngineVideoPipelineMirrorModeBothMirror = 1,
+        /** 仅预览打开镜像 */
+        AliEngineVideoPipelineMirrorModeOnlyPreviewMirror = 2,
+        /** 仅推流打开镜像 */
+        AliEngineVideoPipelineMirrorModeOnlyPublishMirror = 3,
     };
 
     /**
@@ -3211,7 +3247,19 @@ typedef enum {
          * @note 此回调标识了内部无法恢复了设备异常，收到此回调时用户需要检查设备是否可用
          */
         virtual void OnLocalDeviceException(AliEngineLocalDeviceType deviceType, AliEngineLocalDeviceExceptionType exceptionType, const char* msg){};
+
+        /**
+         * @brief 本地音频设备状态回调
+         * @param state  当前状态，AliEngineLocalAudioStateType类型
+         */
+        virtual void OnLocalAudioStateChange(AliEngineLocalAudioStateType state, const char* msg) {};
         
+        /**
+         * @brief 本地视频设备状态回调
+         * @param state  当前状态，AliRtcLocalVideoStateType类型
+         */
+        virtual void onLocalVideoStateChanged(AliEngineLocalVideoStateType state, const char* msg) {};
+
         /**
          * @brief 伴奏控制消息
          * @param uid 用户
@@ -3656,9 +3704,46 @@ typedef enum {
          */
         virtual int PublishLocalAudioStream(bool enabled) = 0;
 
+        /**
+         * @brief 是否推送第二条音频流
+         * @param enabled 是否开启/关闭推送第二条音频流
+         * - YES: 开启第二条音频流推送
+         * - NO: 关闭第二条音频流推送
+         * @return
+         * - 0: 设置成功
+         * - <0: 设置失败
+         *  - AliRtcErrInner: SDK内部状态错误，需检查是否创建SDK实例成功
+         *
+         * @note
+         * - SDK默认设置不会推送第二条音频流，加入频道前调用此接口设置是否推送第二条音频流，将在加入频道成功时生效，加入频道成功后可以随时调用此接口开启/关闭第二条音频流推送
+         * - 若当前频道模式为 {@link AliRtcInteractivelive} 模式，只有用户角色为 {@link AliRtcClientRoleInteractive} 时SDK才会允许推送第二条视频流，因此该模式下调用此接口设置推流时，需要同时配合调用接口 {@link AliRtcEngine::setClientRole:} 更改角色
+         * - 第二条音频流内容，需要设置自定义输入音频推送内容，可参考接口 {@link AliRtcEngine::addExternalAudioStream:AliRtcExternalAudioStreamConfig:} 使用外部音频输入
+         * - 本地音频推流结果发生变化时，SDK会触发 {@link AliRtcEngineDelegate:onAudioPublishStateChanged:newState:elapseSinceLastState:channel:} 回调通知音频推流最新状态
+         */
         virtual int PublishLocalDualAudioStream(bool enabled) = 0;
 
+        /**
+         * @brief 获取第二条音频流推流的状态
+         * @return
+         - 0: 未推流
+         - >0: 已推流
+         */
         virtual int IsLocalDualAudioStreamPublished() = 0;
+        
+        /**
+         * @brief 设置预览和推流镜像能力
+         * @param mirrorMode 设置镜像的模式
+         * @return
+         * - 0: 设置成功
+         * - <0: 设置失败
+         *  - AliRtcErrInner: SDK内部状态错误，需检查是否创建SDK实例成功
+         *
+         * @note
+         * - 此接口在入会前和入会后均可以动态设置，SDK内部会记录状态，并在可以操作预览及编码的时候对视频进行操作；
+         * - 使用此接口的优先级会高于setLocalViewConfig&setVideoEncoderConfig
+         * - 此接口与setLocalViewConfig&setVideoEncoderConfig里面的mirror重合，使用时只要使用其中一个即可
+         */
+        virtual int setVideoMirrorMode(AliEngineVideoPipelineMirrorMode mirrorMode) = 0;
 
         /**
          * @brief 根据RtsUrl推流，目前同时只支持推一路流
